@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../supabase";
+import { Icons } from "../components/Icons";
 
 const Rewards = ({ rewards, onChange }) => {
   const [showModal, setShowModal] = useState(false);
@@ -34,10 +35,10 @@ const Rewards = ({ rewards, onChange }) => {
     <div className="n-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
         <div>
-          <h1 className="section-title" style={{ margin: 0 }}>المكافآت 🎁</h1>
+          <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.Gift size={22} /> المكافآت</h1>
           <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: '13px' }}>الجوايز اللي عملائك يقدروا يستبدلوها بالنقاط</p>
         </div>
-        <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={openAdd}>+ مكافأة جديدة</button>
+        <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={openAdd}><Icons.Plus /> مكافأة جديدة</button>
       </div>
 
       <div className="n-card" style={{ padding: 0, overflow: 'hidden' }}>

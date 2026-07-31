@@ -1,10 +1,11 @@
 import React from "react";
+import { Icons } from "../components/Icons";
 
 const COLUMNS = [
-  { id: "تم الاستلام", title: "📥 تم الاستلام", color: "var(--danger)", tint: "var(--danger-tint)" },
-  { id: "تم الدفع", title: "💳 تم الدفع", color: "var(--info)", tint: "var(--info-tint)" },
-  { id: "يتم التحضير", title: "⏳ يتم التحضير", color: "var(--amber)", tint: "var(--amber-tint)" },
-  { id: "جاهز للاستلام", title: "🛍️ جاهز للاستلام", color: "var(--success)", tint: "var(--success-tint)" }
+  { id: "تم الاستلام", title: "تم الاستلام", Icon: Icons.Inbox, color: "var(--danger)", tint: "var(--danger-tint)" },
+  { id: "تم الدفع", title: "تم الدفع", Icon: Icons.CreditCard, color: "var(--info)", tint: "var(--info-tint)" },
+  { id: "يتم التحضير", title: "يتم التحضير", Icon: Icons.Clock, color: "var(--amber)", tint: "var(--amber-tint)" },
+  { id: "جاهز للاستلام", title: "جاهز للاستلام", Icon: Icons.ShoppingBag, color: "var(--success)", tint: "var(--success-tint)" }
 ];
 
 const matchStatus = (orderStatus, colId) => {
@@ -22,7 +23,10 @@ const LiveOrders = ({ orders }) => {
     <div className="n-fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
         <div>
-          <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--ink)', margin: 0 }}>شاشة المراقبة الحية 🔴</h2>
+          <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--ink)', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+            شاشة المراقبة الحية
+            <span className="n-glow-pulse" style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--danger)', display: 'inline-block' }} />
+          </h2>
           <p style={{ fontSize: '13px', color: 'var(--ink-faint)', margin: 0 }}>متابعة سير الطلبات ومراحل الكاشير (للعرض فقط)</p>
         </div>
         <div style={{ background: 'var(--ink)', color: 'white', padding: '10px 20px', borderRadius: 'var(--r-md)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -37,7 +41,7 @@ const LiveOrders = ({ orders }) => {
           return (
             <div key={col.id} className="n-card n-rise" style={{ '--d': `${colIdx * 80}ms`, flex: 1, minWidth: '280px', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}>
               <div style={{ background: col.tint, padding: '14px 18px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <b style={{ color: col.color, fontSize: '14.5px' }}>{col.title}</b>
+                <b style={{ color: col.color, fontSize: '14.5px', display: 'flex', alignItems: 'center', gap: '8px' }}><col.Icon size={16} /> {col.title}</b>
                 <span style={{ background: 'var(--paper-raised)', color: col.color, padding: '2px 10px', borderRadius: 'var(--r-full)', fontSize: '13px', fontWeight: 'bold' }}>
                   {colOrders.length}
                 </span>
@@ -75,8 +79,8 @@ const LiveOrders = ({ orders }) => {
                       </div>
 
                       {order.notes && (
-                        <div style={{ background: 'var(--danger-tint)', color: 'var(--danger)', padding: '6px 10px', borderRadius: 'var(--r-sm)', fontSize: '11px', fontWeight: 'bold', marginTop: '10px', display: 'flex', gap: '5px' }}>
-                          <span>⚠️ ملاحظة:</span><span>{order.notes}</span>
+                        <div style={{ background: 'var(--danger-tint)', color: 'var(--danger)', padding: '6px 10px', borderRadius: 'var(--r-sm)', fontSize: '11px', fontWeight: 'bold', marginTop: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                          <Icons.AlertTriangle size={12} /><span>ملاحظة:</span><span>{order.notes}</span>
                         </div>
                       )}
 

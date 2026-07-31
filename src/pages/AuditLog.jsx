@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../supabase";
+import { Icons } from "../components/Icons";
 
 const TABLE_LABELS = { products: "منتج", categories: "قسم", staff_users: "موظف" };
 const ACTION_LABELS = { INSERT: "إضافة", UPDATE: "تعديل", DELETE: "حذف" };
@@ -30,7 +31,7 @@ const AuditLog = () => {
     <div className="n-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
         <div>
-          <h1 className="section-title" style={{ margin: 0 }}>سجل النشاط 🕓</h1>
+          <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.History size={22} /> سجل النشاط</h1>
           <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: '13px' }}>كل تعديل على المنيو أو الأقسام أو الموظفين متسجل هنا تلقائيًا — مين وعمل إيه وإمتى</p>
         </div>
         <select className="n-select" style={{ width: '180px', margin: 0 }} value={filterTable} onChange={e => setFilterTable(e.target.value)}>

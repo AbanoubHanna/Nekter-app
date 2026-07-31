@@ -2,23 +2,8 @@ import React, { useState, useEffect } from "react";
 import { supabase, mapOrderedRow, toSnakeRow } from "../supabase";
 import { useLocation } from "react-router-dom";
 import ConfettiBurst from "../components/ConfettiBurst";
+import { Icons } from "../components/Icons";
 import "../styles/theme.css";
-
-const Icons = {
-  Menu: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>,
-  Orders: () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
-  User: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  Phone: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>,
-  Call: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
-  Plus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  Minus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  Cart: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.39H5.12"/></svg>,
-  Heart: ({ filled }) => <svg width="17" height="17" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3.4.833-4.5 2-1.1-1.167-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>,
-  Share: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
-  Search: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  Close: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  Fire: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 1 1-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5-2.5"/></svg>,
-};
 
 // --- single brand accent (teal) for all categories, matching nekterdrinksbar.sa ---
 const getTemp = () => "cold";
@@ -111,7 +96,7 @@ const CustomerView = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState("الكل");
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [toastMsg, setToastMsg] = useState("");
+  const [toastMsg, setToastMsg] = useState(null);
   const [loading, setLoading] = useState(true);
   const [cartBounce, setCartBounce] = useState(false);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
@@ -223,15 +208,15 @@ const CustomerView = () => {
   const cartTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
-  const showToastMsg = (msg) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(""), 1800);
+  const showToastMsg = (text, Icon = Icons.Check) => {
+    setToastMsg({ text, Icon });
+    setTimeout(() => setToastMsg(null), 1800);
   };
 
   const handleAddToCart = (p) => {
     const ex = cart.find(x => x.id === p.id);
     setCart(ex ? cart.map(x => x.id === p.id ? { ...ex, qty: ex.qty + 1 } : x) : [...cart, { ...p, qty: 1 }]);
-    showToastMsg("تم التحديث بنجاح ✔️");
+    showToastMsg("تم التحديث بنجاح");
     setCartBounce(false);
     requestAnimationFrame(() => setCartBounce(true));
   };
@@ -244,7 +229,7 @@ const CustomerView = () => {
   const handleOrderAgain = (oldItems) => {
     setCart(oldItems);
     setView("menu");
-    showToastMsg("تم التحديث بنجاح ✔️");
+    showToastMsg("تم التحديث بنجاح");
   };
 
   const toggleFavorite = (p) => {
@@ -262,7 +247,7 @@ const CustomerView = () => {
     } else {
       try {
         await navigator.clipboard.writeText(text);
-        showToastMsg("تم نسخ تفاصيل المنتج للمشاركة 📋");
+        showToastMsg("تم نسخ تفاصيل المنتج للمشاركة", Icons.Clipboard);
       } catch { /* clipboard unavailable */ }
     }
   };
@@ -311,8 +296,8 @@ const CustomerView = () => {
         <>
           <div className="hero-wrap n-rise">
             <div className="hero-top">
-              <span className="stub" style={{ color: 'white', background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}>📍 طاولة {tableNumber}</span>
-              <span className="stub" style={{ color: 'white', background: 'var(--amber)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}>⭐ {availablePoints} نقطة</span>
+              <span className="stub" style={{ color: 'white', background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}><Icons.Pin /> طاولة {tableNumber}</span>
+              <span className="stub" style={{ color: 'white', background: 'var(--amber)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}><Icons.Star /> {availablePoints} نقطة</span>
             </div>
             <div className="hero-body">
               <img src="/logo.png" alt="Nekter" style={{ height: '80px', objectFit: 'contain', marginBottom: '16px' }} />
@@ -387,7 +372,7 @@ const CustomerView = () => {
                 <div className="n-rise" style={{ '--d': '20ms' }}>
                   <div className="section-head">
                     <h2 style={{ fontSize: '21px', fontWeight: '900', color: 'var(--berry-deep)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      🎁 كومبو اللمة
+                      <Icons.Gift size={20} /> كومبو اللمة
                     </h2>
                   </div>
                   <div className="product-rail">
@@ -463,7 +448,7 @@ const CustomerView = () => {
               {rewards.length > 0 && (
                 <div className="n-card n-rise" style={{ padding: '20px', marginBottom: '20px', background: 'linear-gradient(135deg, var(--amber-tint), var(--paper-raised))' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                    <h3 style={{ margin: 0, color: 'var(--amber-deep)', fontSize: '16px' }}>🎁 مكافآتك</h3>
+                    <h3 style={{ margin: 0, color: 'var(--amber-deep)', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Gift size={17} /> مكافآتك</h3>
                     <span className="stub" style={{ color: 'var(--amber-deep)' }}>{availablePoints} نقطة متاحة</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -513,8 +498,8 @@ const CustomerView = () => {
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
-                    <button className="n-btn n-btn-outline" style={{ padding: '12px' }} onClick={() => setSelectedOrderDetails(o)}>📄 تفاصيل الطلب</button>
-                    <button className="n-btn" style={{ padding: '12px', background: 'var(--teal-tint)', color: 'var(--teal-deep)' }} onClick={() => handleOrderAgain(o.items)}>🔄 طلب مرة أخرى</button>
+                    <button className="n-btn n-btn-outline" style={{ padding: '12px' }} onClick={() => setSelectedOrderDetails(o)}><Icons.Receipt size={16} /> تفاصيل الطلب</button>
+                    <button className="n-btn" style={{ padding: '12px', background: 'var(--teal-tint)', color: 'var(--teal-deep)' }} onClick={() => handleOrderAgain(o.items)}><Icons.Repeat /> طلب مرة أخرى</button>
                   </div>
 
                   <a href="tel:+966562203030" className="n-btn n-btn-ghost" style={{ width: '100%', marginTop: '8px', padding: '10px', fontSize: '13px', textDecoration: 'none' }}>
@@ -531,7 +516,7 @@ const CustomerView = () => {
       {redeemedCode && (
         <div className="sheet-overlay" style={{ alignItems: 'center' }} onClick={() => setRedeemedCode(null)}>
           <div className="n-card n-pop" style={{ width: '100%', maxWidth: '360px', padding: '30px', margin: '20px', textAlign: 'center' }} onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize: '38px', marginBottom: '10px' }}>🎉</div>
+            <div style={{ color: 'var(--berry-deep)', marginBottom: '10px', display: 'flex', justifyContent: 'center' }}><Icons.Gift size={38} /></div>
             <h3 style={{ margin: '0 0 6px 0', color: 'var(--ink)' }}>تم استبدال "{redeemedCode.name}"</h3>
             <p style={{ color: 'var(--ink-faint)', fontSize: '13px', margin: '0 0 18px' }}>قول الكود ده للكاشير عشان يفعّله</p>
             <div className="stub stub-lg" style={{ color: 'var(--amber-deep)', letterSpacing: '3px', margin: '0 auto 20px', display: 'inline-flex' }}>{redeemedCode.code}</div>
@@ -562,8 +547,8 @@ const CustomerView = () => {
       )}
 
       <div className="bottom-nav">
-        <div className={`nav-item ${view === "menu" ? "active" : ""}`} onClick={() => setView("menu")}><Icons.Menu /> المنيو</div>
-        <div className={`nav-item ${view === "orders" ? "active" : ""}`} onClick={() => setView("orders")}><Icons.Orders /> طلباتي</div>
+        <div className={`nav-item ${view === "menu" ? "active" : ""}`} onClick={() => setView("menu")}><Icons.Menu size={22} /> المنيو</div>
+        <div className={`nav-item ${view === "orders" ? "active" : ""}`} onClick={() => setView("orders")}><Icons.Orders size={22} /> طلباتي</div>
       </div>
 
       {cart.length > 0 && view === "menu" && (
@@ -609,11 +594,11 @@ const CustomerView = () => {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '14px' }}>
-              <button className="n-btn" style={{ padding: '15px', border: paymentMethod === "شبكة" ? '2px solid var(--teal)' : '1.5px solid var(--line)', background: paymentMethod === "شبكة" ? 'var(--teal-tint)' : 'var(--paper-raised)', color: 'var(--ink)' }} onClick={() => setPaymentMethod("شبكة")}>💳 شبكة</button>
-              <button className="n-btn" style={{ padding: '15px', border: paymentMethod === "كاش" ? '2px solid var(--teal)' : '1.5px solid var(--line)', background: paymentMethod === "كاش" ? 'var(--teal-tint)' : 'var(--paper-raised)', color: 'var(--ink)' }} onClick={() => setPaymentMethod("كاش")}>💵 كاش</button>
+              <button className="n-btn" style={{ padding: '15px', border: paymentMethod === "شبكة" ? '2px solid var(--teal)' : '1.5px solid var(--line)', background: paymentMethod === "شبكة" ? 'var(--teal-tint)' : 'var(--paper-raised)', color: 'var(--ink)' }} onClick={() => setPaymentMethod("شبكة")}><Icons.CreditCard size={16} /> شبكة</button>
+              <button className="n-btn" style={{ padding: '15px', border: paymentMethod === "كاش" ? '2px solid var(--teal)' : '1.5px solid var(--line)', background: paymentMethod === "كاش" ? 'var(--teal-tint)' : 'var(--paper-raised)', color: 'var(--ink)' }} onClick={() => setPaymentMethod("كاش")}><Icons.Cash size={16} /> كاش</button>
             </div>
-            <button disabled className="n-btn" style={{ width: '100%', padding: '15px', background: 'var(--paper)', color: 'var(--ink-faint)', marginBottom: '20px', cursor: 'not-allowed' }}>📱 الدفع عبر التطبيق (قريباً)</button>
-            <button className="n-btn n-btn-primary" style={{ width: '100%', padding: '17px', fontSize: '17px' }} onClick={submitOrder}>إرسال الطلب 🚀</button>
+            <button disabled className="n-btn" style={{ width: '100%', padding: '15px', background: 'var(--paper)', color: 'var(--ink-faint)', marginBottom: '20px', cursor: 'not-allowed' }}><Icons.Smartphone size={16} /> الدفع عبر التطبيق (قريباً)</button>
+            <button className="n-btn n-btn-primary" style={{ width: '100%', padding: '17px', fontSize: '17px' }} onClick={submitOrder}><Icons.Rocket size={18} /> إرسال الطلب</button>
             <button className="n-btn n-btn-ghost" style={{ width: '100%', padding: '12px', marginTop: '8px' }} onClick={() => setIsCheckoutOpen(false)}>رجوع للمنيو</button>
           </div>
         </div>
@@ -623,14 +608,14 @@ const CustomerView = () => {
         <div className="sheet-overlay" style={{ alignItems: 'center', background: 'rgba(20,109,100,0.92)' }}>
           <div style={{ position: 'relative', textAlign: 'center' }}>
             <ConfettiBurst count={18} />
-            <div className="n-pop" style={{ width: '90px', height: '90px', borderRadius: '50%', background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', margin: '0 auto 20px' }}>✅</div>
+            <div className="n-pop" style={{ width: '90px', height: '90px', borderRadius: '50%', background: 'white', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}><Icons.CheckCircle size={44} /></div>
             <h2 style={{ color: 'white', fontSize: '22px', fontWeight: '900', margin: '0 0 6px' }}>تم إرسال طلبك!</h2>
-            <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0, fontSize: '14px' }}>هيوصلك على طاولتك في أسرع وقت 🚀</p>
+            <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0, fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}><Icons.Rocket size={14} /> هيوصلك على طاولتك في أسرع وقت</p>
           </div>
         </div>
       )}
 
-      {toastMsg && <div className="n-toast">{toastMsg}</div>}
+      {toastMsg && <div className="n-toast"><toastMsg.Icon size={16} /> {toastMsg.text}</div>}
     </div>
   );
 };

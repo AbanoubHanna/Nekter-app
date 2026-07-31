@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
+import { Icons } from "../components/Icons";
 
 const CategoriesManager = ({ categories, products }) => {
   const [selectedCat, setSelectedCat] = useState(null);
@@ -24,7 +25,7 @@ const CategoriesManager = ({ categories, products }) => {
     }
   }, [categories, products, isEditMode]);
 
-  // 👈 دالة الإخفاء السريع للقسم
+  // دالة الإخفاء السريع للقسم
   const toggleCatVisibility = async (cat, e) => {
     e.stopPropagation();
     if (cat.isTemp) return alert("يرجى حفظ القسم أولاً قبل إخفائه.");
@@ -32,7 +33,7 @@ const CategoriesManager = ({ categories, products }) => {
     await supabase.from('categories').update({ is_visible: newStatus }).eq('id', cat.id);
   };
 
-  // 👈 دالة الإخفاء السريع للمنتج
+  // دالة الإخفاء السريع للمنتج
   const toggleProdVisibility = async (prod, e) => {
     e.stopPropagation();
     const newStatus = prod.isVisible !== false ? false : true;
@@ -98,16 +99,16 @@ const CategoriesManager = ({ categories, products }) => {
   return (
     <div className="n-fade-in" style={{ display: 'flex', gap: '20px', height: 'calc(100vh - 160px)', position: 'relative' }}>
       
-      {/* 📂 عمود الأقسام */}
+      {/* عمود الأقسام */}
       <div className="n-card" style={{ width: '380px', display: 'flex', flexDirection: 'column', padding: '22px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', alignItems: 'center' }}>
-          <h3 style={{ fontSize: '18px', margin: 0, color: 'var(--ink)' }}>الأقسام 📂</h3>
+          <h3 style={{ fontSize: '18px', margin: 0, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Folder size={16} /> الأقسام</h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             {!isEditMode ? (
-              <button className="n-btn n-btn-dark" onClick={() => setIsEditMode(true)} style={{ padding: '8px 14px', fontSize: '12px' }}>✏️ تعديل الترتيب</button>
+              <button className="n-btn n-btn-dark" onClick={() => setIsEditMode(true)} style={{ padding: '8px 14px', fontSize: '12px' }}><Icons.Edit size={14} /> تعديل الترتيب</button>
             ) : (
               <>
-                <button className="n-btn n-btn-primary" onClick={handleSaveAll} style={{ padding: '8px 14px', fontSize: '12px' }}>💾 حفظ</button>
+                <button className="n-btn n-btn-primary" onClick={handleSaveAll} style={{ padding: '8px 14px', fontSize: '12px' }}><Icons.Save size={14} /> حفظ</button>
                 <button className="n-btn n-btn-outline" onClick={() => setIsEditMode(false)} style={{ padding: '8px 14px', fontSize: '12px' }}>إلغاء</button>
               </>
             )}
@@ -133,7 +134,7 @@ const CategoriesManager = ({ categories, products }) => {
                 transition: '0.2s'
               }}
             >
-              {isEditMode && <span style={{ color: 'var(--ink-faint)', cursor: 'grab' }}>↕️</span>}
+              {isEditMode && <span style={{ color: 'var(--ink-faint)', cursor: 'grab' }}><Icons.ArrowUpDown size={14} /></span>}
               {isEditMode ? (
                 <input 
                   className="n-input"
@@ -157,7 +158,7 @@ const CategoriesManager = ({ categories, products }) => {
                     style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px' }}
                     title={cat.isVisible === false ? "إظهار القسم" : "إخفاء القسم"}
                   >
-                    {cat.isVisible === false ? "🙈" : "👁️"}
+                    {cat.isVisible === false ? <Icons.EyeOff size={16} /> : <Icons.Eye size={16} />}
                   </button>
                 </>
               )}
@@ -166,7 +167,7 @@ const CategoriesManager = ({ categories, products }) => {
         </div>
       </div>
 
-      {/* ☕ عمود المنتجات */}
+      {/* عمود المنتجات */}
       <div className="n-card" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '22px' }}>
         <h3 style={{ fontSize: '18px', marginBottom: '15px', margin: '0 0 15px 0', color: 'var(--ink)' }}>
           منتجات: <span style={{ color: 'var(--teal)' }}>{selectedCat || "يرجى اختيار قسم"}</span>
@@ -191,7 +192,7 @@ const CategoriesManager = ({ categories, products }) => {
                     transition: '0.2s'
                   }}
                 >
-                  <span style={{ color: 'var(--line)' }}>{isEditMode ? '↕️' : '☕'}</span>
+                  <span style={{ color: 'var(--line)' }}>{isEditMode ? <Icons.ArrowUpDown size={14} /> : <Icons.Coffee size={14} />}</span>
                   {isEditMode ? (
                     <input 
                       className="n-input"
@@ -216,7 +217,7 @@ const CategoriesManager = ({ categories, products }) => {
                         style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', marginRight: '10px' }}
                         title={p.isVisible === false ? "إظهار المنتج" : "إخفاء المنتج"}
                       >
-                        {p.isVisible === false ? "🙈" : "👁️"}
+                        {p.isVisible === false ? <Icons.EyeOff size={16} /> : <Icons.Eye size={16} />}
                       </button>
 
                       <span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{p.price} ر.س</span>
@@ -227,7 +228,7 @@ const CategoriesManager = ({ categories, products }) => {
             </div>
           ) : (
             <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--ink-faint)', flexDirection: 'column', gap: '10px' }}>
-              <span style={{ fontSize: '40px' }}>👈</span>
+              <Icons.ArrowRight size={32} />
               <b>اختر قسماً من اليمين لعرض أو تعديل منتجاته</b>
             </div>
           )}
@@ -238,11 +239,11 @@ const CategoriesManager = ({ categories, products }) => {
         <div className="sheet-overlay" style={{ alignItems: 'center', background: 'rgba(22,33,58,0.4)' }}>
           <div className="n-card n-fade-in" style={{ maxWidth: '300px', textAlign: 'center', padding: '40px 20px' }}>
             <div style={{ 
-              width: '70px', height: '70px', background: 'var(--success-tint)', color: 'var(--success)', 
-              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', 
-              fontSize: '35px', margin: '0 auto 20px', animation: 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' 
+              width: '70px', height: '70px', background: 'var(--success-tint)', color: 'var(--success)',
+              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 20px', animation: 'popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
             }}>
-              ✓
+              <Icons.Check size={34} />
             </div>
             <h2 style={{ fontSize: '20px', color: 'var(--ink)', marginBottom: '10px' }}>تم الحفظ بنجاح</h2>
             <p style={{ color: 'var(--ink-faint)', fontSize: '14px', marginBottom: '20px' }}>تم تحديث المنيو والترتيب في جميع الشاشات.</p>

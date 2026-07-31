@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import AnimatedNumber from "../components/AnimatedNumber";
+import { Icons } from "../components/Icons";
 
 const RANGE_OPTIONS = [
   { id: "today", label: "اليوم" },
@@ -34,10 +35,10 @@ const Reports = ({ orders, products }) => {
   const aov = filteredOrders.length > 0 ? Math.round(totalSales / filteredOrders.length) : 0;
 
   const getAiSuggestion = () => {
-    if (filteredOrders.length === 0) return "⏳ لا توجد طلبات في هذه الفترة بعد لبدء التحليل...";
-    if (aov < 30) return "💡 متوسط السلة منخفض! درّب الكاشير على سؤال العميل: 'تحب تضيف كراميل أو حلى مع طلبك؟' لرفع المتوسط.";
-    if (aov > 60) return "🔥 متوسط السلة ممتاز! عملائك مستعدون للدفع. أنشئ منتج (Signature) مميز بسعر أعلى لهذه الفئة.";
-    return "📈 الأداء مستقر. راجع الأصناف الأقل مبيعاً بالأسفل واعمل لها عرض (كومبو) لتحريك المخزون.";
+    if (filteredOrders.length === 0) return { Icon: Icons.Clock, text: "لا توجد طلبات في هذه الفترة بعد لبدء التحليل..." };
+    if (aov < 30) return { Icon: Icons.Lightbulb, text: "متوسط السلة منخفض! درّب الكاشير على سؤال العميل: 'تحب تضيف كراميل أو حلى مع طلبك؟' لرفع المتوسط." };
+    if (aov > 60) return { Icon: Icons.Fire, text: "متوسط السلة ممتاز! عملائك مستعدون للدفع. أنشئ منتج (Signature) مميز بسعر أعلى لهذه الفئة." };
+    return { Icon: Icons.Trending, text: "الأداء مستقر. راجع الأصناف الأقل مبيعاً بالأسفل واعمل لها عرض (كومبو) لتحريك المخزون." };
   };
 
   const peakHoursData = Array.from({ length: 24 }, (_, i) => {
@@ -64,11 +65,12 @@ const Reports = ({ orders, products }) => {
   const statsList = Object.values(productStats).sort((a, b) => b.qty - a.qty);
   const topProducts = statsList.slice(0, 5);
   const worstProducts = statsList.length > 5 ? statsList.slice(-5).reverse() : [];
+  const aiSuggestion = getAiSuggestion();
 
   return (
     <div className="n-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
-        <h1 className="section-title" style={{ margin: 0 }}>نظرة عامة على الأداء 📈</h1>
+        <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.Trending size={22} /> نظرة عامة على الأداء</h1>
         <div style={{ display: 'flex', gap: '8px', background: 'var(--paper)', padding: '5px', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
           {RANGE_OPTIONS.map(o => (
             <button key={o.id} onClick={() => setRange(o.id)} className="n-btn" style={{
@@ -102,15 +104,15 @@ const Reports = ({ orders, products }) => {
 
       <div className="n-card" style={{ padding: '22px', background: 'linear-gradient(to left, var(--paper), var(--paper-raised))', borderRight: '4px solid var(--info)', marginBottom: '22px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-          <span style={{ fontSize: '24px' }}>🎯</span>
+          <span style={{ color: 'var(--info)' }}><Icons.Target size={22} /></span>
           <h3 style={{ margin: 0, color: 'var(--ink)' }}>المستشار الذكي لزيادة المبيعات</h3>
         </div>
-        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: '15px', fontWeight: 600, lineHeight: 1.6 }}>{getAiSuggestion()}</p>
+        <p style={{ margin: 0, color: 'var(--ink-soft)', fontSize: '15px', fontWeight: 600, lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}><aiSuggestion.Icon size={17} /> {aiSuggestion.text}</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '20px' }}>
         <div className="n-card n-rise n-hover-lift" style={{ '--d': '240ms', padding: '22px' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '18px', color: 'var(--ink)' }}>📈 رادار ساعات الذروة</h3>
+          <h3 style={{ marginTop: 0, marginBottom: '18px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Trending size={18} /> رادار ساعات الذروة</h3>
           <div style={{ height: '240px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={peakHoursData}>
@@ -123,7 +125,7 @@ const Reports = ({ orders, products }) => {
         </div>
 
         <div className="n-card n-rise n-hover-lift" style={{ '--d': '300ms', padding: '22px' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '18px', color: 'var(--ink)' }}>🥧 توزيع مبيعات الأقسام</h3>
+          <h3 style={{ marginTop: 0, marginBottom: '18px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.PieChart size={18} /> توزيع مبيعات الأقسام</h3>
           <div style={{ height: '240px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -140,7 +142,7 @@ const Reports = ({ orders, products }) => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         <div className="n-card n-rise n-hover-lift" style={{ '--d': '360ms', padding: '22px' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)' }}>🏆 الأكثر مبيعاً</h3>
+          <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Trophy size={18} /> الأكثر مبيعاً</h3>
           {topProducts.length === 0 ? <p style={{ color: 'var(--ink-faint)' }}>لا توجد بيانات كافية بعد.</p> : topProducts.map((p, i) => (
             <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < topProducts.length - 1 ? '1px solid var(--line)' : 'none' }}>
               <span style={{ fontWeight: '700', color: 'var(--ink)' }}>#{i + 1} {p.name}</span>
@@ -152,7 +154,7 @@ const Reports = ({ orders, products }) => {
           ))}
         </div>
         <div className="n-card n-rise n-hover-lift" style={{ '--d': '420ms', padding: '22px' }}>
-          <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)' }}>🐌 الأقل مبيعاً</h3>
+          <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.TrendingDown size={18} /> الأقل مبيعاً</h3>
           {worstProducts.length === 0 ? <p style={{ color: 'var(--ink-faint)' }}>لا توجد بيانات كافية بعد للمقارنة.</p> : worstProducts.map((p, i) => (
             <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < worstProducts.length - 1 ? '1px solid var(--line)' : 'none' }}>
               <span style={{ fontWeight: '700', color: 'var(--ink)' }}>{p.name}</span>

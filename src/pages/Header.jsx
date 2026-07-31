@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Icons } from "../components/Icons";
 import "../styles/theme.css";
 
 const motivationalQuotes = [
-  "🚀 يوم جديد، فرصة جديدة لكسر الأرقام القياسية!",
-  "💡 الابتسامة في وجه العميل هي أول خطوة لزيادة المبيعات.",
-  "🔥 اقترح إضافة (صوص أو حجم أكبر) لرفع متوسط الفاتورة.",
-  "🏆 خدمة العملاء الممتازة تصنع زبوناً مدى الحياة."
+  { Icon: Icons.Rocket, text: "يوم جديد، فرصة جديدة لكسر الأرقام القياسية!" },
+  { Icon: Icons.Lightbulb, text: "الابتسامة في وجه العميل هي أول خطوة لزيادة المبيعات." },
+  { Icon: Icons.Fire, text: "اقترح إضافة (صوص أو حجم أكبر) لرفع متوسط الفاتورة." },
+  { Icon: Icons.Trophy, text: "خدمة العملاء الممتازة تصنع زبوناً مدى الحياة." },
 ];
 
 const Header = ({ user, onLogout }) => {
@@ -20,14 +21,15 @@ const Header = ({ user, onLogout }) => {
 
   const displayName = user?.name || "أحمد الإدارة";
   const displayRole = user?.role || "مدير النظام";
+  const { Icon: QuoteIcon, text: quoteText } = motivationalQuotes[quoteIndex];
 
   return (
     <div style={{ height: '72px', background: 'var(--paper-raised)', borderBottom: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 36px', boxShadow: 'var(--shadow-sm)', zIndex: 10, flexShrink: 0 }}>
 
       <div key={quoteIndex} className="n-fade-in" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <span style={{ fontSize: '19px' }}>{motivationalQuotes[quoteIndex].split(' ')[0]}</span>
+        <span style={{ color: 'var(--teal-deep)' }}><QuoteIcon size={19} /></span>
         <div style={{ color: 'var(--ink-soft)', fontWeight: 700, fontSize: '14.5px' }}>
-          {motivationalQuotes[quoteIndex].substring(2)}
+          {quoteText}
         </div>
       </div>
 

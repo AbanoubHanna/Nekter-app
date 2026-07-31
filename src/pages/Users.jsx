@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "../supabase";
-
-const Icons = {
-  Edit: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-  Trash: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
-};
+import { Icons } from "../components/Icons";
 
 const Users = ({ users, onChange, adminRole }) => {
   const [modalMode, setModalMode] = useState(null);
@@ -48,13 +44,13 @@ const Users = ({ users, onChange, adminRole }) => {
     <div className="n-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
         <div>
-          <h1 className="section-title" style={{ margin: 0 }}>فريق العمل 🛡️</h1>
+          <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.Shield size={22} /> فريق العمل</h1>
           <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: '13px' }}>{activeCount} من {users.length} نشط حالياً</p>
         </div>
-        <button className="n-btn n-btn-dark" style={{ padding: '11px 20px' }} onClick={() => { setModalMode('add'); setForm({ name: "", role: "كاشير", pin: "", status: "نشط" }); setShowModal(true); }}>+ تعيين موظف</button>
+        <button className="n-btn n-btn-dark" style={{ padding: '11px 20px' }} onClick={() => { setModalMode('add'); setForm({ name: "", role: "كاشير", pin: "", status: "نشط" }); setShowModal(true); }}><Icons.Plus size={14} /> تعيين موظف</button>
       </div>
 
-      <input className="n-input" placeholder="🔍 ابحث عن موظف..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '16px', maxWidth: '320px' }} />
+      <input className="n-input" placeholder="ابحث عن موظف..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '16px', maxWidth: '320px' }} />
 
       <div className="n-card" style={{ padding: 0, overflow: 'hidden' }}>
         <table>

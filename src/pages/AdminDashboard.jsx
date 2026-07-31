@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase, mapOrderedRow } from "../supabase";
+import { Icons } from "../components/Icons";
 
 // استدعاء المكونات
 import Sidebar from "./Sidebar";
@@ -195,10 +196,10 @@ const AdminDashboard = () => {
               style={{ padding: '14px 20px', marginBottom: '20px', background: 'var(--danger-tint)', border: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', cursor: 'pointer' }}
               onClick={() => setActiveTab('inventory')}
             >
-              <span style={{ color: 'var(--danger)', fontWeight: '800', fontSize: '13.5px' }}>
-                ⚠️ {lowStockProducts.length} صنف على وشك النفاد: {lowStockProducts.slice(0, 3).map(p => p.name).join('، ')}{lowStockProducts.length > 3 ? '...' : ''}
+              <span style={{ color: 'var(--danger)', fontWeight: '800', fontSize: '13.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Icons.AlertTriangle size={16} /> {lowStockProducts.length} صنف على وشك النفاد: {lowStockProducts.slice(0, 3).map(p => p.name).join('، ')}{lowStockProducts.length > 3 ? '...' : ''}
               </span>
-              <span className="n-btn n-btn-outline" style={{ padding: '6px 14px', fontSize: '12px' }}>اعرض المخزون →</span>
+              <span className="n-btn n-btn-outline" style={{ padding: '6px 14px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>اعرض المخزون <Icons.ArrowRight size={14} /></span>
             </div>
           )}
           {activeTab === 'reports' && <Reports orders={orders} products={products} />}

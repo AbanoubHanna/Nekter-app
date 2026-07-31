@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import AnimatedNumber from "../components/AnimatedNumber";
+import { Icons } from "../components/Icons";
 
 const getOrderDate = (o) => o.createdAt?.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
 
@@ -40,10 +41,10 @@ const Customers = ({ orders }) => {
   const avgSpend = totalCustomers > 0 ? Math.round(totalRevenue / totalCustomers) : 0;
 
   const getTier = (total) => {
-    if (total >= 2000) return { name: '💎 بلاتيني', tag: 'tag-neutral' };
-    if (total >= 1000) return { name: '🥇 ذهبي', tag: 'tag-hot' };
-    if (total >= 500) return { name: '🥈 فضي', tag: 'tag-neutral' };
-    return { name: '🥉 برونزي', tag: 'tag-sweet' };
+    if (total >= 2000) return { Icon: Icons.Gem, name: 'بلاتيني', tag: 'tag-neutral' };
+    if (total >= 1000) return { Icon: Icons.Medal, name: 'ذهبي', tag: 'tag-hot' };
+    if (total >= 500) return { Icon: Icons.Medal, name: 'فضي', tag: 'tag-neutral' };
+    return { Icon: Icons.Medal, name: 'برونزي', tag: 'tag-sweet' };
   };
 
   const getFavoriteItem = (items) => Object.keys(items).length > 0 ? Object.keys(items).reduce((a, b) => items[a] > items[b] ? a : b) : "غير محدد";
@@ -65,7 +66,7 @@ const Customers = ({ orders }) => {
         </div>
       </div>
 
-      <input className="n-input" placeholder="🔍 ابحث بالاسم أو رقم الجوال..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '16px', maxWidth: '340px' }} />
+      <input className="n-input" placeholder="ابحث بالاسم أو رقم الجوال..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '16px', maxWidth: '340px' }} />
 
       <div className="n-card" style={{ padding: 0, overflow: 'hidden' }}>
         <table>
@@ -77,11 +78,11 @@ const Customers = ({ orders }) => {
                 <tr key={i}>
                   <td><b>{c.name}</b></td>
                   <td style={{ letterSpacing: '1px', color: 'var(--ink-soft)' }}>{c.phone}</td>
-                  <td><span className={`tag ${tier.tag}`}>{tier.name}</span></td>
+                  <td><span className={`tag ${tier.tag}`}><tier.Icon /> {tier.name}</span></td>
                   <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{c.total.toLocaleString()} ر.س</span></td>
                   <td style={{ color: 'var(--ink-faint)', fontSize: '13px' }}>{c.lastOrder ? c.lastOrder.toLocaleDateString('ar-EG') : '—'}</td>
                   <td>
-                    <button className="n-btn n-btn-outline" style={{ padding: '6px 14px', fontSize: '12px' }} onClick={() => setSelectedCustomer(c)}>👁️ بروفايل</button>
+                    <button className="n-btn n-btn-outline" style={{ padding: '6px 14px', fontSize: '12px' }} onClick={() => setSelectedCustomer(c)}><Icons.Eye size={14} /> بروفايل</button>
                   </td>
                 </tr>
               );
@@ -106,14 +107,14 @@ const Customers = ({ orders }) => {
               <div><div style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>الإنفاق</div><b style={{ color: 'var(--teal-deep)' }}>{selectedCustomer.total} ر.س</b></div>
               <div><div style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>الطلبات</div><b>{selectedCustomer.count} طلب</b></div>
               <div style={{ gridColumn: '1 / -1', marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed var(--line)' }}>
-                <div style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>المشروب المفضل 🥤</div>
+                <div style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>المشروب المفضل</div>
                 <b>{getFavoriteItem(selectedCustomer.items)}</b>
               </div>
             </div>
 
             <a href={`https://wa.me/966${selectedCustomer.phone.substring(1)}?text=أهلاً ${selectedCustomer.name}، اشتقنالك في نكتير بار! طلبك المفضل (${getFavoriteItem(selectedCustomer.items)}) مستنيك بخصم خاص اليوم.`}
-              target="_blank" rel="noreferrer" className="n-btn" style={{ background: '#25D366', color: 'white', width: '100%', padding: '13px', textDecoration: 'none' }}>
-              💬 إرسال عرض على الواتساب
+              target="_blank" rel="noreferrer" className="n-btn" style={{ background: '#25D366', color: 'white', width: '100%', padding: '13px', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <Icons.MessageCircle /> إرسال عرض على الواتساب
             </a>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import * as XLSX from 'xlsx';
+import { Icons } from "../components/Icons";
 
 const RANGE_OPTIONS = [
   { id: "today", label: "اليوم" },
@@ -59,14 +60,14 @@ const Invoices = ({ orders = [] }) => {
     <div className="n-fade-in">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
         <div>
-          <h1 className="section-title" style={{ margin: 0 }}>سجل الفواتير 🧾</h1>
+          <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.Receipt size={22} /> سجل الفواتير</h1>
           <p style={{ margin: '4px 0 0', color: 'var(--ink-faint)', fontSize: '13px' }}>{filtered.length} فاتورة · إجمالي {totalRevenue.toLocaleString()} ر.س</p>
         </div>
-        <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={exportExcel}>📤 تصدير Excel</button>
+        <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={exportExcel}><Icons.Download /> تصدير Excel</button>
       </div>
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-        <input className="n-input" placeholder="🔍 ابحث بالاسم أو الجوال أو رقم الطاولة أو رقم الطلب..." value={search} onChange={e => setSearch(e.target.value)} style={{ flex: 1, minWidth: '240px', margin: 0 }} />
+        <input className="n-input" placeholder="ابحث بالاسم أو الجوال أو رقم الطاولة أو رقم الطلب..." value={search} onChange={e => setSearch(e.target.value)} style={{ flex: 1, minWidth: '240px', margin: 0 }} />
         <div style={{ display: 'flex', gap: '6px', background: 'var(--paper)', padding: '5px', borderRadius: 'var(--r-md)', border: '1px solid var(--line)' }}>
           {RANGE_OPTIONS.map(o => (
             <button key={o.id} onClick={() => setRange(o.id)} className="n-btn" style={{
@@ -108,7 +109,7 @@ const Invoices = ({ orders = [] }) => {
                             <span style={{  }}>{item.price * item.qty} ر.س</span>
                           </div>
                         ))}
-                        {o.notes && <div style={{ marginTop: '8px', color: 'var(--danger)', fontSize: '12px', fontWeight: '700' }}>📝 {o.notes}</div>}
+                        {o.notes && <div style={{ marginTop: '8px', color: 'var(--danger)', fontSize: '12px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px' }}><Icons.Note size={13} /> {o.notes}</div>}
                       </td>
                     </tr>
                   )}

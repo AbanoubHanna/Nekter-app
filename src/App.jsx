@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import CustomerView from "./pages/CustomerView";
 import CashierView from "./pages/CashierView";
 import AdminDashboard from "./pages/AdminDashboard";
-import Uploader from "./pages/Uploader"; 
 
 function App() {
   return (
@@ -14,7 +13,6 @@ function App() {
         <Route path="/" element={<CustomerView />} />
         <Route path="/cashier" element={<CashierView />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/upload-data" element={<Uploader />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

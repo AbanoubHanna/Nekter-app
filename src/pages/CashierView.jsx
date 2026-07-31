@@ -1,18 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase, mapOrderedRow } from "../supabase";
+import { Icons } from "../components/Icons";
 import "../styles/theme.css";
-
-const Icons = {
-  User: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  Bell: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-  Wallet: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>,
-  Coffee: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>,
-  Check: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>,
-  VolumeUp: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
-  VolumeMute: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>,
-  Logout: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
-  X: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-};
 
 const GlobalStyle = () => (
   <style>{`
@@ -75,7 +64,7 @@ const CashierView = () => {
     if (error || !data) { setRedeemResult({ ok: false, message: "الكود غير موجود" }); return; }
     if (data.status === 'مستخدم') { setRedeemResult({ ok: false, message: "الكود ده اتفعّل قبل كده" }); return; }
     await supabase.from('loyalty_redemptions').update({ status: 'مستخدم', used_at: new Date().toISOString() }).eq('id', data.id);
-    setRedeemResult({ ok: true, message: `تم تفعيل: ${data.reward_name} ✅` });
+    setRedeemResult({ ok: true, message: `تم تفعيل: ${data.reward_name}` });
     setRedeemCode("");
   };
 
@@ -118,7 +107,7 @@ const CashierView = () => {
       if (error) throw error;
       setCurrentUser({ ...currentUser, ...profileForm });
       setShowEditProfile(false);
-      alert("تم تحديث بياناتك بنجاح ✅");
+      alert("تم تحديث بياناتك بنجاح");
     } catch (error) {
       alert("فشل في تحديث البيانات.");
     }
@@ -157,10 +146,10 @@ const CashierView = () => {
   const stage4 = orders.filter(o => o.status === "جاهز للاستلام");
 
   const stagesConfig = {
-    "تم الاستلام": { data: stage1, color: "var(--danger)", tint: "var(--danger-tint)", btnText: "تأكيد الدفع 💵", nextState: "تم الدفع", icon: <Icons.Bell /> },
-    "تم الدفع": { data: stage2, color: "var(--info)", tint: "var(--info-tint)", btnText: "بدء التجهيز ☕", nextState: "جاري التجهيز", icon: <Icons.Wallet /> },
-    "جاري التجهيز": { data: stage3, color: "var(--amber)", tint: "var(--amber-tint)", btnText: "الطلب جاهز للاستلام ✔️", nextState: "جاهز للاستلام", icon: <Icons.Coffee /> },
-    "جاهز للاستلام": { data: stage4, color: "var(--success)", tint: "var(--success-tint)", btnText: "تسليم للعميل (إنهاء) 🏁", nextState: "مكتمل", icon: <Icons.Check /> }
+    "تم الاستلام": { data: stage1, color: "var(--danger)", tint: "var(--danger-tint)", btnText: "تأكيد الدفع", nextState: "تم الدفع", icon: <Icons.Bell /> },
+    "تم الدفع": { data: stage2, color: "var(--info)", tint: "var(--info-tint)", btnText: "بدء التجهيز", nextState: "جاري التجهيز", icon: <Icons.Wallet /> },
+    "جاري التجهيز": { data: stage3, color: "var(--amber)", tint: "var(--amber-tint)", btnText: "الطلب جاهز للاستلام", nextState: "جاهز للاستلام", icon: <Icons.Coffee /> },
+    "جاهز للاستلام": { data: stage4, color: "var(--success)", tint: "var(--success-tint)", btnText: "تسليم للعميل (إنهاء)", nextState: "مكتمل", icon: <Icons.Check /> }
   };
 
   const advanceOrderState = async (orderId, currentStage) => {
@@ -194,8 +183,8 @@ const CashierView = () => {
             <div style={{ marginTop: '5px' }}>
               <div style={{ fontSize: '13px', color: 'var(--ink-soft)', fontWeight: '900' }}>{order.customerName || "ضيف"}</div>
               {order.customerPhone && (
-                <div style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: 'bold', marginTop: '2px', letterSpacing: '1px' }}>
-                  📞 {order.customerPhone}
+                <div style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: 'bold', marginTop: '2px', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                  <Icons.Call size={11} /> {order.customerPhone}
                 </div>
               )}
             </div>
@@ -212,8 +201,8 @@ const CashierView = () => {
             </div>
           ))}
           {order.notes && (
-            <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed var(--line)', color: 'var(--danger)', fontSize: '13px', fontWeight: 'bold' }}>
-              📝 ملاحظة: {order.notes}
+            <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '1px dashed var(--line)', color: 'var(--danger)', fontSize: '13px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Icons.Note size={13} /> ملاحظة: {order.notes}
             </div>
           )}
         </div>
@@ -284,7 +273,7 @@ const CashierView = () => {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <button className="n-btn" style={{ background: 'var(--amber)', color: 'white', padding: '10px 16px', fontSize: '13px' }} onClick={() => { setShowRedeem(true); setRedeemResult(null); }}>
-            🎁 استبدال نقاط
+            <Icons.Gift size={15} /> استبدال نقاط
           </button>
           <button
             className={`sound-btn ${!isSoundEnabled ? 'muted' : ''}`}
@@ -314,8 +303,8 @@ const CashierView = () => {
 
             {showUserMenu && (
               <div className="dropdown-menu">
-                <div className="dropdown-item" onClick={() => { setShowEditProfile(true); setShowUserMenu(false); }}>
-                  ✏️ تعديل بياناتي
+                <div className="dropdown-item" onClick={() => { setShowEditProfile(true); setShowUserMenu(false); }} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Icons.Edit size={14} /> تعديل بياناتي
                 </div>
                 <div className="dropdown-item danger" onClick={() => { setShowLogoutConfirm(true); setShowUserMenu(false); }}>
                   <Icons.Logout /> تقفيل شيفت وخروج
@@ -353,7 +342,7 @@ const CashierView = () => {
               <input placeholder="https://..." className="n-input" style={{ marginBottom: '22px', direction: 'ltr', textAlign: 'left' }}
                 value={profileForm.photo} onChange={e => setProfileForm({ ...profileForm, photo: e.target.value })} />
 
-              <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '15px' }}>حفظ التعديلات ✔️</button>
+              <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '15px' }}><Icons.Check size={16} /> حفظ التعديلات</button>
             </form>
           </div>
         </div>
@@ -362,7 +351,7 @@ const CashierView = () => {
       {showRedeem && (
         <div className="sheet-overlay" style={{ alignItems: 'center' }} onClick={() => setShowRedeem(false)}>
           <div className="n-card n-fade-in" style={{ padding: '30px', width: '100%', maxWidth: '380px', margin: '20px' }} onClick={e => e.stopPropagation()}>
-            <h2 style={{ marginTop: 0, color: 'var(--ink)' }}>🎁 استبدال نقاط عميل</h2>
+            <h2 style={{ marginTop: 0, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Gift size={19} /> استبدال نقاط عميل</h2>
             <p style={{ color: 'var(--ink-faint)', fontSize: '13px', marginBottom: '18px' }}>اطلب من العميل الكود اللي طلع له بعد الاستبدال</p>
             <form onSubmit={handleRedeemCode}>
               <input required className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '14px', textTransform: 'uppercase' }}
@@ -370,8 +359,8 @@ const CashierView = () => {
               <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '14px' }}>تحقق وفعّل</button>
             </form>
             {redeemResult && (
-              <div style={{ marginTop: '14px', padding: '12px', borderRadius: 'var(--r-md)', textAlign: 'center', fontWeight: '800', fontSize: '14px', background: redeemResult.ok ? 'var(--success-tint)' : 'var(--danger-tint)', color: redeemResult.ok ? 'var(--success)' : 'var(--danger)' }}>
-                {redeemResult.message}
+              <div style={{ marginTop: '14px', padding: '12px', borderRadius: 'var(--r-md)', textAlign: 'center', fontWeight: '800', fontSize: '14px', background: redeemResult.ok ? 'var(--success-tint)' : 'var(--danger-tint)', color: redeemResult.ok ? 'var(--success)' : 'var(--danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                {redeemResult.ok ? <Icons.Check size={16} /> : <Icons.AlertTriangle size={16} />} {redeemResult.message}
               </div>
             )}
           </div>
@@ -391,7 +380,7 @@ const CashierView = () => {
 
             <div style={{ display: 'flex', gap: '15px' }}>
               <button className="n-btn n-btn-outline" style={{ flex: 1, padding: '13px' }} onClick={() => setShowLogoutConfirm(false)}>
-                <Icons.X /> إلغاء
+                <Icons.Close /> إلغاء
               </button>
               <button
                 className="n-btn"
