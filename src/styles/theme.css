@@ -1,41 +1,40 @@
 /* =========================================================
    NEKTER — SHARED DESIGN SYSTEM
    One visual language for Customer / Cashier / Admin.
-   Signature: the "ticket stub" — every price, order number and
-   status reads like a torn receipt stub, because this is a POS.
-   Color = temperature: teal (cold), amber (hot), berry (dessert).
+   Brand accent: teal, matching nekterdrinksbar.sa exactly.
+   Amber is reserved for the loyalty/points context only.
    ========================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
 
 :root {
   /* --- surface & ink --- */
-  --paper: #FBF9F5;
+  --paper: #F8FAFC;
   --paper-raised: #FFFFFF;
-  --line: #E9E3D8;
-  --ink: #16213A;
-  --ink-soft: #5B6779;
-  --ink-faint: #9AA3B2;
+  --line: #E2E8F0;
+  --ink: #0F172A;
+  --ink-soft: #475569;
+  --ink-faint: #94A3B8;
 
-  /* --- brand: temperature-coded --- */
-  --teal: #1F9E92;
-  --teal-deep: #146D64;
-  --teal-tint: #E4F5F2;
-  --amber: #C97D2E;
-  --amber-deep: #92591D;
-  --amber-tint: #FBEEDF;
-  --berry: #B6467A;
-  --berry-deep: #85305A;
-  --berry-tint: #FBEAF1;
+  /* --- brand: single teal accent (nekterdrinksbar.sa brand color) --- */
+  --teal: #51BAC0;
+  --teal-deep: #0F6C6F;
+  --teal-tint: #E6F7F7;
+  --amber: #D97706;
+  --amber-deep: #B45309;
+  --amber-tint: #FFFBEB;
+  --berry: #51BAC0;
+  --berry-deep: #0F6C6F;
+  --berry-tint: #E6F7F7;
 
-  --success: #22A06B;
-  --success-tint: #E4F7EE;
-  --danger: #D64545;
-  --danger-tint: #FCEAEA;
-  --warning: #D69A2D;
-  --warning-tint: #FDF3E0;
-  --info: #3B7DD6;
-  --info-tint: #EAF2FD;
+  --success: #10B981;
+  --success-tint: #ECFDF5;
+  --danger: #EF4444;
+  --danger-tint: #FEF2F2;
+  --warning: #F59E0B;
+  --warning-tint: #FFFBEB;
+  --info: #3B82F6;
+  --info-tint: #EFF6FF;
 
   /* --- shape & depth --- */
   --r-sm: 10px;
@@ -55,42 +54,19 @@
 body { font-family: var(--font-display); }
 
 /* =========================================================
-   TICKET STUB — the signature element
-   A price / order-code / total wrapped like a torn receipt.
-   Works on any background because the notches are drawn with
-   a radial-gradient "bite" matching --stub-bg (set per context).
+   PRICE / NUMBER READOUT — plain bold mono figure, no box.
+   Used for every price, order total and order code.
    ========================================================= */
 .stub {
-  --stub-bg: var(--paper-raised);
-  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--stub-bg);
-  border: 1.5px dashed var(--line);
-  border-radius: var(--r-sm);
-  padding: 4px 12px;
   font-family: var(--font-mono);
-  font-weight: 700;
+  font-weight: 800;
   white-space: nowrap;
 }
-.stub::before, .stub::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  background: var(--notch-bg, var(--paper));
-  border-radius: 50%;
-  transform: translateY(-50%);
-}
-.stub::before { right: -5px; }
-.stub::after { left: -5px; }
 
-.stub-lg { padding: 8px 18px; font-size: 20px; border-radius: var(--r-md); }
-.stub-lg::before, .stub-lg::after { width: 14px; height: 14px; }
-.stub-lg::before { right: -7px; }
-.stub-lg::after { left: -7px; }
+.stub-lg { font-size: 22px; }
 
 /* =========================================================
    TEMPERATURE TAGS — color = category kind, encodes real info
@@ -99,7 +75,7 @@ body { font-family: var(--font-display); }
 .tag-cold   { background: var(--teal-tint);  color: var(--teal-deep); }
 .tag-hot    { background: var(--amber-tint); color: var(--amber-deep); }
 .tag-sweet  { background: var(--berry-tint); color: var(--berry-deep); }
-.tag-neutral{ background: #F1EEE7; color: var(--ink-soft); }
+.tag-neutral{ background: var(--paper-raised); color: var(--ink-faint); border: 1px solid var(--line); }
 
 .combo-card {
   border: 2px dashed var(--berry) !important;

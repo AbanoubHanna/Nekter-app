@@ -15,16 +15,12 @@ const Icons = {
   Cart: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.39H5.12"/></svg>,
 };
 
-// --- temperature classification: color encodes real info about the drink ---
-const getTemp = (categoryName = "") => {
-  if (categoryName.includes("ساخن") || categoryName.includes("قهوة")) return "hot";
-  if (categoryName.includes("آيس") || categoryName.includes("ايس") || categoryName.includes("حلو")) return "sweet";
-  return "cold";
-};
+// --- single brand accent (teal) for all categories, matching nekterdrinksbar.sa ---
+const getTemp = () => "cold";
 const TEMP_STYLE = {
   cold:  { tag: "tag-cold",  accent: "var(--teal)",  deep: "var(--teal-deep)" },
-  hot:   { tag: "tag-hot",   accent: "var(--amber)", deep: "var(--amber-deep)" },
-  sweet: { tag: "tag-sweet", accent: "var(--berry)", deep: "var(--berry-deep)" },
+  hot:   { tag: "tag-cold",  accent: "var(--teal)",  deep: "var(--teal-deep)" },
+  sweet: { tag: "tag-cold",  accent: "var(--teal)",  deep: "var(--teal-deep)" },
 };
 
 const GlobalStyle = () => (
@@ -32,16 +28,16 @@ const GlobalStyle = () => (
     body { margin: 0; background-color: var(--paper); direction: rtl; padding-bottom: 130px; color: var(--ink); }
     .hero-wrap { position: relative; border-radius: 0 0 32px 32px; overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 22px; }
     .hero-top { background: var(--ink); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .hero-body { background: linear-gradient(135deg, var(--teal) 0%, var(--teal-deep) 100%); padding: 34px 20px 42px; text-align: center; }
+    .hero-body { background: var(--teal); padding: 34px 20px 42px; text-align: center; }
     .cat-rail { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 18px; scrollbar-width: none; }
     .cat-rail::-webkit-scrollbar { display: none; }
     .cat-chip { flex-shrink: 0; padding: 10px 20px; border-radius: var(--r-full); font-weight: 800; font-size: 14px; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper-raised); color: var(--ink-soft); transition: 0.2s; }
-    .cat-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
-    .section-head { padding: 4px 20px; display: flex; justify-content: space-between; align-items: baseline; margin: 22px 0 12px; }
+    .cat-chip.active { background: var(--teal); color: white; border-color: var(--teal); }
+    .section-head { padding: 4px 20px; display: flex; flex-direction: column; gap: 10px; margin: 22px 0 12px; }
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 20px; }
-    .product-card { background: var(--paper-raised); border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: 0.2s; }
+    .product-card { background: var(--paper-raised); border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: row; align-items: stretch; gap: 12px; padding: 14px; box-shadow: var(--shadow-sm); transition: 0.2s; }
     .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .product-img-wrap { position: relative; height: 140px; background: var(--paper); }
+    .product-img-wrap { position: relative; width: 84px; height: 84px; flex-shrink: 0; border-radius: var(--r-md); overflow: hidden; background: var(--paper); }
     .product-img { width: 100%; height: 100%; object-fit: cover; }
     .qty-pill { display: flex; align-items: center; background: var(--paper); border-radius: var(--r-full); border: 1.5px solid var(--line); }
     .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
@@ -225,8 +221,8 @@ const CustomerView = () => {
         <>
           <div className="hero-wrap n-rise">
             <div className="hero-top">
-              <span className="stub" style={{ '--stub-bg': 'var(--ink)', '--notch-bg': 'var(--ink)', color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}>📍 طاولة {tableNumber}</span>
-              <span className="stub" style={{ '--stub-bg': 'var(--amber)', '--notch-bg': 'var(--ink)', color: 'white', borderColor: 'rgba(255,255,255,0.4)' }}>⭐ {availablePoints} نقطة</span>
+              <span className="stub" style={{ color: 'white', background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}>📍 طاولة {tableNumber}</span>
+              <span className="stub" style={{ color: 'white', background: 'var(--amber)', borderRadius: 'var(--r-full)', padding: '8px 16px' }}>⭐ {availablePoints} نقطة</span>
             </div>
             <div className="hero-body">
               <img src="/logo.png" alt="Nekter" style={{ height: '80px', objectFit: 'contain', marginBottom: '16px' }} />
@@ -251,25 +247,26 @@ const CustomerView = () => {
                 {products.filter(p => p.isCombo).map((p, idx) => {
                   const qty = cart.find(x => x.id === p.id)?.qty || 0;
                   return (
-                    <div key={p.id} className="product-card combo-card n-rise n-hover-lift" style={{ '--d': `${idx * 50}ms`, minWidth: '260px', maxWidth: '260px', flexShrink: 0, position: 'relative' }}>
+                    <div key={p.id} className="product-card combo-card n-rise n-hover-lift" style={{ '--d': `${idx * 50}ms`, minWidth: '280px', maxWidth: '280px', flexShrink: 0, position: 'relative' }}>
                       <span className="combo-ribbon">عرض خاص</span>
                       <div className="product-img-wrap">
                         <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                       </div>
-                      <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
                         <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
                         {p.comboItems?.length > 0 && (
                           <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5' }}>
                             {p.comboItems.map(i => `${i.qty}x ${i.name}`).join(' + ')}
                           </p>
                         )}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                          <span className="stub" style={{ color: 'var(--berry-deep)', fontSize: '15px' }}>{p.price} ر.س</span>
-                          <div className="qty-pill">
-                            <button className="qty-btn n-press" style={{ background: 'var(--berry)' }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                            <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
-                            <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
-                          </div>
+                        <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {p.price * qty} ر.س</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'space-between' }}>
+                        <span className="stub" style={{ color: 'var(--berry-deep)', fontSize: '17px' }}>{p.price} ر.س</span>
+                        <div className="qty-pill">
+                          <button className="qty-btn n-press" style={{ background: 'var(--berry)' }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
+                          <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
+                          <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
                         </div>
                       </div>
                     </div>
@@ -291,10 +288,8 @@ const CustomerView = () => {
             return (
               <div key={cat} className="n-rise" style={{ '--d': `${catIdx * 70}ms` }}>
                 <div className="section-head">
-                  <h2 style={{ fontSize: '21px', fontWeight: '900', color: 'var(--ink)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: style.accent }} /> {cat}
-                  </h2>
-                  <span className={`tag ${style.tag}`}>{grouped[cat].length} صنف</span>
+                  <span className="tag tag-neutral">{grouped[cat].length} منتجات</span>
+                  <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--ink)', margin: 0 }}>{cat}</h2>
                 </div>
                 <div className="products-grid">
                   {grouped[cat].map((p, pIdx) => {
@@ -304,16 +299,17 @@ const CustomerView = () => {
                         <div className="product-img-wrap">
                           <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                         </div>
-                        <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
                           <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
-                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5', flex: 1 }}>{p.description}</p>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
-                            <span className="stub" style={{ color: style.deep, fontSize: '15px' }}>{p.price} ر.س</span>
-                            <div className="qty-pill">
-                              <button className="qty-btn n-press" style={{ background: style.accent }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                              <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
-                              <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
-                            </div>
+                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>
+                          <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {p.price * qty} ر.س</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'space-between' }}>
+                          <span className="stub" style={{ color: style.deep, fontSize: '17px' }}>{p.price} ر.س</span>
+                          <div className="qty-pill">
+                            <button className="qty-btn n-press" style={{ background: style.accent }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
+                            <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
+                            <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
                           </div>
                         </div>
                       </div>
