@@ -205,6 +205,15 @@ const CustomerView = () => {
   const spentPoints = redemptions.reduce((s, r) => s + (r.pointsCost || 0), 0);
   const availablePoints = Math.max(0, userPoints - spentPoints);
 
+  const resetCustomerSession = () => {
+    if (!window.confirm("هيتم مسح رقمك واسمك وسلة الطلب الحالية من الجهاز ده، عشان الشخص اللي بعدك يدخل بياناته هو. تكمل؟")) return;
+    localStorage.removeItem("nekterCustomerName");
+    localStorage.removeItem("nekterCustomerPhone");
+    setCustomerName("");
+    setCustomerPhone("");
+    setCart([]);
+  };
+
   const redeemReward = async (reward) => {
     if (availablePoints < reward.pointsCost) return;
     if (!window.confirm(`استبدال ${reward.pointsCost} نقطة بـ "${reward.name}"؟`)) return;
@@ -465,7 +474,15 @@ const CustomerView = () => {
         </>
       ) : (
         <div style={{ padding: '20px' }}>
-          <h1 style={{ fontWeight: '900', color: 'var(--ink)', marginBottom: '24px', fontSize: '22px' }}>سجل طلباتي</h1>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+            <h1 style={{ fontWeight: '900', color: 'var(--ink)', fontSize: '22px', margin: 0 }}>سجل طلباتي</h1>
+            {customerPhone && (
+              <button className="n-btn n-btn-ghost" style={{ fontSize: '12px', padding: '6px 10px' }} onClick={resetCustomerSession}>مش انت؟ غيّر الحساب</button>
+            )}
+          </div>
+          {customerPhone && (
+            <p style={{ color: 'var(--ink-faint)', fontSize: '12.5px', marginTop: 0, marginBottom: '20px', direction: 'ltr', textAlign: 'right' }}>{customerPhone}</p>
+          )}
           {!customerPhone ? (
             <div className="n-card" style={{ padding: '30px 20px', textAlign: 'center' }}>
               <div style={{ color: 'var(--teal)', marginBottom: '15px', display: 'flex', justifyContent: 'center' }}><Icons.Phone /></div>
@@ -612,6 +629,9 @@ const CustomerView = () => {
                 <input type="tel" placeholder="05xxxxxxxx" className="n-input" style={{ direction: 'ltr' }} value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} />
               </div>
             </div>
+            {(customerName || customerPhone) && (
+              <button type="button" className="n-btn n-btn-ghost" style={{ padding: '4px 0', fontSize: '11.5px', marginBottom: '16px' }} onClick={resetCustomerSession}>مش دي بياناتك؟ امسحها وابدأ من جديد</button>
+            )}
             <label className="n-label">ملاحظات إضافية</label>
             <textarea placeholder="أي ملاحظات؟ (بدون سكر، زيادة ثلج..)" className="n-textarea" style={{ minHeight: '80px', marginBottom: '20px' }} value={orderNotes} onChange={e => setOrderNotes(e.target.value)} />
 
