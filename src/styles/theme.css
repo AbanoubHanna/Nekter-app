@@ -1,0 +1,261 @@
+/* =========================================================
+   NEKTER — SHARED DESIGN SYSTEM
+   One visual language for Customer / Cashier / Admin.
+   Signature: the "ticket stub" — every price, order number and
+   status reads like a torn receipt stub, because this is a POS.
+   Color = temperature: teal (cold), amber (hot), berry (dessert).
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+
+:root {
+  /* --- surface & ink --- */
+  --paper: #FBF9F5;
+  --paper-raised: #FFFFFF;
+  --line: #E9E3D8;
+  --ink: #16213A;
+  --ink-soft: #5B6779;
+  --ink-faint: #9AA3B2;
+
+  /* --- brand: temperature-coded --- */
+  --teal: #1F9E92;
+  --teal-deep: #146D64;
+  --teal-tint: #E4F5F2;
+  --amber: #C97D2E;
+  --amber-deep: #92591D;
+  --amber-tint: #FBEEDF;
+  --berry: #B6467A;
+  --berry-deep: #85305A;
+  --berry-tint: #FBEAF1;
+
+  --success: #22A06B;
+  --success-tint: #E4F7EE;
+  --danger: #D64545;
+  --danger-tint: #FCEAEA;
+  --warning: #D69A2D;
+  --warning-tint: #FDF3E0;
+  --info: #3B7DD6;
+  --info-tint: #EAF2FD;
+
+  /* --- shape & depth --- */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-full: 999px;
+  --shadow-sm: 0 2px 8px rgba(22,33,58,0.06);
+  --shadow-md: 0 10px 30px rgba(22,33,58,0.08);
+  --shadow-lg: 0 24px 60px rgba(22,33,58,0.16);
+
+  /* --- type --- */
+  --font-display: 'Cairo', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+body { font-family: var(--font-display); }
+
+/* =========================================================
+   TICKET STUB — the signature element
+   A price / order-code / total wrapped like a torn receipt.
+   Works on any background because the notches are drawn with
+   a radial-gradient "bite" matching --stub-bg (set per context).
+   ========================================================= */
+.stub {
+  --stub-bg: var(--paper-raised);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--stub-bg);
+  border: 1.5px dashed var(--line);
+  border-radius: var(--r-sm);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.stub::before, .stub::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--notch-bg, var(--paper));
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+.stub::before { right: -5px; }
+.stub::after { left: -5px; }
+
+.stub-lg { padding: 8px 18px; font-size: 20px; border-radius: var(--r-md); }
+.stub-lg::before, .stub-lg::after { width: 14px; height: 14px; }
+.stub-lg::before { right: -7px; }
+.stub-lg::after { left: -7px; }
+
+/* =========================================================
+   TEMPERATURE TAGS — color = category kind, encodes real info
+   ========================================================= */
+.tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: var(--r-full); font-size: 12px; font-weight: 800; }
+.tag-cold   { background: var(--teal-tint);  color: var(--teal-deep); }
+.tag-hot    { background: var(--amber-tint); color: var(--amber-deep); }
+.tag-sweet  { background: var(--berry-tint); color: var(--berry-deep); }
+.tag-neutral{ background: #F1EEE7; color: var(--ink-soft); }
+
+.combo-card {
+  border: 2px dashed var(--berry) !important;
+  background: linear-gradient(180deg, var(--berry-tint) 0%, var(--paper-raised) 55%) !important;
+}
+.combo-ribbon {
+  position: absolute; top: 10px; right: -8px; background: var(--berry); color: white;
+  font-size: 11px; font-weight: 900; padding: 4px 12px 4px 16px; border-radius: var(--r-sm) 0 0 var(--r-sm);
+  box-shadow: var(--shadow-sm); z-index: 2;
+}
+.combo-rail { display: flex; gap: 14px; overflow-x: auto; padding: 4px 20px 18px; scrollbar-width: none; }
+.combo-rail::-webkit-scrollbar { display: none; }
+
+/* =========================================================
+   PRIMITIVES reused everywhere
+   ========================================================= */
+.n-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.n-btn {
+  font-family: var(--font-display);
+  border: none;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.n-btn:active { transform: scale(0.97); }
+.n-btn-primary { background: var(--teal); color: white; box-shadow: 0 8px 20px rgba(31,158,146,0.28); }
+.n-btn-primary:hover { filter: brightness(1.05); }
+.n-btn-dark { background: var(--ink); color: white; }
+.n-btn-amber { background: var(--amber); color: white; box-shadow: 0 8px 20px rgba(201,125,46,0.28); }
+.n-btn-outline { background: var(--paper-raised); color: var(--ink-soft); border: 1.5px solid var(--line); box-shadow: none; }
+.n-btn-outline:hover { border-color: var(--teal); color: var(--teal-deep); }
+.n-btn-ghost { background: transparent; color: var(--ink-soft); box-shadow: none; }
+.n-btn-danger { background: var(--danger-tint); color: var(--danger); box-shadow: none; }
+
+.n-input, .n-select, .n-textarea {
+  font-family: var(--font-display);
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  outline: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: 0.2s;
+}
+.n-input:focus, .n-select:focus, .n-textarea:focus {
+  border-color: var(--teal);
+  background: var(--paper-raised);
+  box-shadow: 0 0 0 4px var(--teal-tint);
+}
+.n-label { font-size: 12.5px; font-weight: 800; color: var(--ink-soft); display: block; margin-bottom: 6px; }
+
+/* skeleton loading */
+.n-skeleton {
+  background: linear-gradient(90deg, #F1EEE7 25%, #F8F6F1 37%, #F1EEE7 63%);
+  background-size: 400% 100%;
+  animation: n-shimmer 1.4s ease infinite;
+  border-radius: var(--r-md);
+}
+@keyframes n-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+/* toast */
+.n-toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: white; padding: 12px 24px; border-radius: var(--r-full);
+  font-weight: 800; z-index: 9999; box-shadow: var(--shadow-lg);
+  display: flex; align-items: center; gap: 10px;
+  animation: n-toast-in 0.25s ease-out;
+}
+@keyframes n-toast-in { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+.n-fade-in { animation: n-fade 0.25s ease-out; }
+@keyframes n-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* =========================================================
+   POLISH LAYER — entrance choreography & micro-interactions
+   ========================================================= */
+@keyframes n-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.n-rise { animation: n-rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* stagger helper: apply n-rise + style="--d: Nms" for a cascading reveal */
+.n-rise[style] { animation-delay: var(--d, 0ms); }
+
+@keyframes n-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.18); }
+  60% { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+.n-pop { animation: n-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes n-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(31,158,146,0.35); }
+  50% { box-shadow: 0 0 0 10px rgba(31,158,146,0); }
+}
+.n-glow-pulse { animation: n-glow-pulse 1.8s ease-out infinite; }
+
+@keyframes n-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.n-shine {
+  background-image: linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.5) 50%, transparent 60%);
+  background-size: 200% 100%;
+  animation: n-shine 2.4s ease-in-out infinite;
+}
+
+.n-hover-lift { transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease; }
+.n-hover-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.n-press { transition: transform 0.12s ease; }
+.n-press:active { transform: scale(0.94); }
+
+/* success celebration — lightweight CSS confetti burst */
+.n-confetti-piece {
+  position: absolute; top: 50%; left: 50%; width: 7px; height: 10px; opacity: 0;
+  animation: n-confetti-burst 0.9s ease-out forwards;
+}
+@keyframes n-confetti-burst {
+  0% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) translateY(0); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--x, 0px)), calc(-50% + var(--y, -60px))) rotate(var(--r, 180deg)); }
+}
+
+@keyframes n-count-tick { from { opacity: 0.4; } to { opacity: 1; } }
+.n-count { animation: n-count-tick 0.3s ease; font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  .n-rise, .n-pop, .n-glow-pulse, .n-shine, .n-hover-lift, .n-confetti-piece, .n-count { animation: none !important; transition: none !important; }
+}
+
+/* shared modal / bottom-sheet overlay, used by all three surfaces */
+.sheet-overlay {
+  position: fixed; inset: 0; background: rgba(22,33,58,0.7); backdrop-filter: blur(2px);
+  z-index: 2000; display: flex; align-items: flex-end; justify-content: center; padding: 0;
+}
+.sheet {
+  background: var(--paper-raised); width: 100%; max-width: 520px;
+  border-radius: 32px 32px 0 0; padding: 28px; max-height: 92vh; overflow-y: auto;
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: var(--r-full); }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }

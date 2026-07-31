@@ -1,0 +1,78 @@
+[
+  {
+    "id": "slush",
+    "label": "سلاش طبيعي",
+    "items": [
+      { "id": "slush_mango", "name": "سلاش مانجو", "desc": "مانجو طبيعي 100٪، قوام كريمي وطعم صيفي يسرسح على القلب!", "price": 18, "image": "/uploads/menu/Mango.png" },
+      { "id": "slush_hibiscus", "name": "سلاش كركدية بالحبق", "desc": "مزيج خطير بين حموضة الكركدية ولمسة الحبق العطرية.", "price": 18, "image": "/uploads/menu/Hibiscus_&_Basil.png" },
+      { "id": "slush_pomegranate", "name": "سلاش رمان", "desc": "حبات الرمان الطازجة مفرومة مع الثلج لانتعاش مضاعف.", "price": 18, "image": "/uploads/menu/Pomegranate.png" },
+      { "id": "slush_strawberry", "name": "سلاش فراولة", "desc": "طعم الفراولة الطبيعي والمنعش اللي يحبه قلبك في كل رشفة.", "price": 18, "image": "/uploads/menu/Plain_Strawberry.png" },
+      { "id": "slush_blueberry", "name": "سلاش توت أزرق", "desc": "مكس التوت الأزرق الغني بمضادات الأكسدة والبرودة اللي تصحصحك.", "price": 18, "image": "" }
+    ]
+  },
+  {
+    "id": "mojito",
+    "label": "موهيتو",
+    "items": [
+      { "id": "mojito_7up", "name": "موهيتو مع سفن أب", "desc": "كلاسيك موهيتو مع الليمون، النعناع الفريش، ولسعة السفن أب.", "price": 18, "image": "/uploads/menu/Nekter_Classic_Mojito.png" },
+      { "id": "mojito_sparkling", "name": "موهيتو مع مياه غازية", "desc": "انتعاش صحي وخفيف مع المياه الغازية والليمون الطازج.", "price": 23, "image": "/uploads/menu/perria.png" },
+      { "id": "mojito_codered", "name": "موهيتو مع كودرد", "desc": "الطعم المفضل للكل! موهيتو بطاقة الكودرد ولون يفتح النفس.", "price": 20, "image": "/uploads/menu/Code_Red_Mojito.png" },
+      { "id": "mojito_redbull", "name": "موهيتو مع ريد بل", "desc": "محتاج طاقة؟ مكس الريد بل مع الموهيتو هيظبط مودك.", "price": 29, "image": "/uploads/menu/redbull.png" },
+      { "id": "mojito_bison", "name": "موهيتو مع بايسون", "desc": "موهيتو بلمسة بايسون القوية لجرعة نشاط غير عادية.", "price": 20, "image": "" },
+      { "id": "mojito_powerhorse", "name": "موهيتو مع باور هورس", "desc": "طاقة الباور هورس المدموجة مع نعناع وليمون الموهيتو المنعش.", "price": 29, "image": "" }
+    ]
+  },
+  {
+    "id": "juice",
+    "label": "عصير طبيعي",
+    "items": [
+      { "id": "juice_orange", "name": "عصير برتقال", "desc": "عصره فريش، بدون إضافات.. فيتامين سي صافي لتقوية مناعتك.", "price": 18, "image": "/uploads/menu/freshorangejuice.png" },
+      { "id": "juice_watermelon", "name": "عصير بطيخ", "desc": "حبحب بارد وحالي، يروي عطشك في عز الحر.", "price": 18, "image": "/uploads/menu/Watermelon.png" },
+      { "id": "juice_pineapple", "name": "عصير أناناس", "desc": "طعم استوائي مميز يأخذك لعالم تاني من الانتعاش.", "price": 18, "image": "" },
+      { "id": "juice_melon", "name": "عصير شمام", "desc": "عصير شمام طبيعي، حالي وخفيف على المعدة.", "price": 18, "image": "" },
+      { "id": "juice_kids", "name": "عصير بكاسة أطفال", "desc": "عصير طبيعي ومفيد بحجم مناسب ومحبب للأطفال.", "price": 25, "image": "" }
+    ]
+  },
+  {
+    "id": "ice_cream",
+    "label": "آيس كريم",
+    "items": [
+      { "id": "ic_vanilla_sm", "name": "آيس كريم فانيلا صغير", "desc": "قوام كريمي ناعم يذوب في الفم بنكهة الفانيلا الكلاسيكية.", "price": 10, "image": "/uploads/menu/vanilia.png" },
+      { "id": "ic_vanilla_lg", "name": "آيس كريم فانيلا كبير", "desc": "حجم أكبر لمتعة أطول من الفانيلا الغنية والناعمة.", "price": 15, "image": "/uploads/menu/vanilia.png" },
+      { "id": "ic_chocolate_sm", "name": "آيس كريم شوكولاتة صغير", "desc": "عشاق الشوكولاتة.. طعم غني ومميز هيعدل مزاجك فوراً.", "price": 10, "image": "/uploads/menu/Chocolate_Ice_Cream.png" },
+      { "id": "ic_chocolate_lg", "name": "آيس كريم شوكولاتة كبير", "desc": "جرعة مضاعفة من السعادة والشوكولاتة اللذيذة.", "price": 15, "image": "/uploads/menu/Chocolate_Ice_Cream.png" },
+      { "id": "ic_mango_sm", "name": "آيس كريم مانجو صغير", "desc": "مانجو طبيعي مثلج، طعم الفاكهة الحقيقي في كل ملعقة.", "price": 10, "image": "/uploads/menu/Mango_Ice_Cream.png" },
+      { "id": "ic_mango_lg", "name": "آيس كريم مانجو كبير", "desc": "لأن المانجو ما ينشبع منها.. حجم كبير يرضي ذوقك.", "price": 15, "image": "/uploads/menu/Mango_Ice_Cream.png" },
+      { "id": "ic_cheesecake_sm", "name": "آيس كريم تشيز كيك صغير", "desc": "مكس رهيب بين قوام الآيس كريم وطعم التشيز كيك الغني.", "price": 12, "image": "/uploads/menu/chees_cake.png" },
+      { "id": "ic_cheesecake_lg", "name": "آيس كريم تشيز كيك كبير", "desc": "طعم التشيز كيك الفاخر في حجم يكمل معاك السهرة.", "price": 18, "image": "/uploads/menu/chees_cake.png" },
+      { "id": "ic_popcorn_sm", "name": "آيس كريم بوب كورن صغير", "desc": "نكهة مبتكرة ومجنونة! طعم الفشار مع حلاوة الآيس كريم.", "price": 12, "image": "/uploads/menu/popcorn.png" },
+      { "id": "ic_popcorn_lg", "name": "آيس كريم بوب كورن كبير", "desc": "تجربة سينمائية بس في كباية آيس كريم كبيرة!", "price": 18, "image": "/uploads/menu/popcorn.png" },
+      { "id": "ic_oreo_sm", "name": "آيس كريم أوريو صغير", "desc": "قطع الأوريو المقرمشة غرقانة في الآيس كريم اللذيذ.", "price": 12, "image": "/uploads/menu/Oreo.png" },
+      { "id": "ic_oreo_lg", "name": "آيس كريم أوريو كبير", "desc": "مكس الأوريو والحليب اللي ما يُقاوم بحجم أكبر.", "price": 18, "image": "/uploads/menu/Oreo.png" },
+      { "id": "ic_lotus_sm", "name": "آيس كريم لوتس صغير", "desc": "حلاوة الكراميل وبسكويت اللوتس في مكس خيالي.", "price": 12, "image": "/uploads/menu/Lotus_Ice_Cream.png" },
+      { "id": "ic_lotus_lg", "name": "آيس كريم لوتس كبير", "desc": "لأن اللوتس إدمان.. وفرناه لك بحجم يروي شغفك.", "price": 18, "image": "/uploads/menu/Lotus_Ice_Cream.png" }
+    ]
+  },
+  {
+    "id": "hot_beverages",
+    "label": "مشروبات ساخنة",
+    "items": [
+      { "id": "hot_v60", "name": "V60", "desc": "قطرة بقطرة.. استخلصنا لك أفضل إيحاءات القهوة المختصة لمزاج رايق.", "price": 20, "image": "/uploads/menu/V60.png" },
+      { "id": "hot_cortado", "name": "كورتادو", "desc": "توازن مثالي بين الإسبريسو القوي والحليب المبخر لقهوة معتدلة.", "price": 18, "image": "/uploads/menu/Cortado.png" },
+      { "id": "hot_cappuccino", "name": "كابتشينو", "desc": "رغوة غنية وكثيفة مع جرعة إسبريسو تضبط يومك من أول رشفة.", "price": 20, "image": "/uploads/menu/cappuino.png" },
+      { "id": "hot_latte", "name": "لاتيه", "desc": "حليب مبخر بنعومة مع الإسبريسو.. قهوة سلسة وخفيفة.", "price": 20, "image": "/uploads/menu/latte.png" },
+      { "id": "hot_mocha", "name": "موكا حار", "desc": "مكس الدلع! شوكولاتة غنية مع القهوة والحليب الدافئ.", "price": 16, "image": "/uploads/menu/Hot_Mocha.png" },
+      { "id": "hot_americano", "name": "أمريكانو", "desc": "سادة وقوية، جرعة إسبريسو مع ماء حار تصحصحك وتفوقك.", "price": 16, "image": "/uploads/menu/amercanio.png" },
+      { "id": "hot_espresso", "name": "إسبريسو", "desc": "الأساس لكل شيء! جرعة قهوة مركزة ومكثفة لعشاق المزاج العالي.", "price": 14, "image": "/uploads/menu/Espresso.png" },
+      { "id": "hot_cotd", "name": "قهوة اليوم", "desc": "قهوتنا المفلترة الطازجة، نحضرها لك يومياً بأجود المحاصيل.", "price": 15, "image": "/uploads/menu/Coffee_of_the_Day.png" },
+      { "id": "hot_saudi", "name": "قهوة سعودي", "desc": "ريحة الهيل والزعفران ترد الروح.. أصل الضيافة والأصالة.", "price": 15, "image": "/uploads/menu/Saudi_Coffee.png" },
+      { "id": "hot_turkish", "name": "قهوة تركي سادة", "desc": "قهوة بوش أصيلة على الطريقة التقليدية، تظبط الرأس صح.", "price": 11, "image": "/uploads/menu/Turkish_Coffee.png" },
+      { "id": "hot_turkish_milk", "name": "قهوة تركي بالحليب", "desc": "لمسة الحليب الناعمة مع القهوة التركية الكلاسيكية.", "price": 13, "image": "/uploads/menu/Turkish_Coffee_with_Milk.png" },
+      { "id": "hot_red_tea", "name": "شاي أحمر", "desc": "كباية شاي مخمرة صح، تعدل المزاج بعد الأكل.", "price": 9, "image": "/uploads/menu/tea_red.png" },
+      { "id": "hot_green_tea", "name": "شاي أخضر", "desc": "شاي صحي وخفيف يساعدك على الهضم والاسترخاء.", "price": 9, "image": "/uploads/menu/Green_tea.png" },
+      { "id": "hot_sahlab", "name": "سحلب", "desc": "المشروب الرسمي للشتاء! سحلب دافئ يدفيك ويدلعك.", "price": 9, "image": "/uploads/menu/sahlab.png" },
+      { "id": "hot_chocolate", "name": "هوت شوكليت", "desc": "شوكولاتة ساخنة وكثيفة، حضن دافئ في كباية!", "price": 22, "image": "/uploads/menu/hot_choclate.png" },
+      { "id": "hot_signature", "name": "نكتر سيجنتشر", "desc": "مشروبنا الخاص والسري، لمسة نكتر اللي مستحيل تنساها.", "price": 20, "image": "/uploads/menu/nekter_signture.png" }
+    ]
+  }
+]
