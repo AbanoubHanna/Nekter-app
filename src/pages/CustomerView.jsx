@@ -38,10 +38,10 @@ const GlobalStyle = () => (
     .product-img { width: 100%; height: 100%; object-fit: cover; }
     .qty-pill { display: flex; align-items: center; background: var(--paper); border-radius: var(--r-full); border: 1.5px solid var(--line); }
     .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
-    .card-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
-    .card-icon-btn { width: 25px; height: 25px; flex-shrink: 0; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-faint); transition: 0.15s; }
-    .card-icon-btn:hover { background: var(--paper); }
-    .card-icon-btn.is-favorite { color: var(--danger); }
+    .img-overlay { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 2; }
+    .img-overlay-btn { width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); box-shadow: var(--shadow-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-soft); transition: 0.15s; }
+    .img-overlay-btn:hover { transform: scale(1.08); }
+    .img-overlay-btn.is-favorite { color: var(--danger); }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper-raised); height: 78px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -8px 24px rgba(22,33,58,0.06); z-index: 1000; border-top: 1px solid var(--line); }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-faint); cursor: pointer; transition: 0.2s; font-size: 12px; font-weight: 800; }
     .nav-item.active { color: var(--teal); }
@@ -57,24 +57,22 @@ const GlobalStyle = () => (
   `}</style>
 );
 
-const ProductCard = ({ product, qty, accent, deep, isFavorite, onToggleFavorite, onShare, onAdd, onRemove, badge, extraLine, cardStyle, delay, className = "" }) => (
-  <div className={`product-card n-rise n-hover-lift ${className}`} style={{ '--d': `${delay}ms`, position: 'relative', ...cardStyle }}>
+const ProductCard = ({ product, qty, accent, deep, isFavorite, onToggleFavorite, onShare, onAdd, onRemove, badge, extraLine, cardStyle, delay, className = "", anchored = false }) => (
+  <div id={anchored ? `product-${product.id}` : undefined} className={`product-card n-rise n-hover-lift ${className}`} style={{ '--d': `${delay}ms`, position: 'relative', ...cardStyle }}>
     {badge}
     <div className="product-img-wrap">
       <img src={product.image || '/logo.png'} className="product-img" alt={product.name} loading="lazy" />
+      <div className="img-overlay">
+        <button type="button" className={`img-overlay-btn ${isFavorite ? 'is-favorite' : ''}`} onClick={() => onToggleFavorite(product)} aria-label="إضافة للمفضلة">
+          <Icons.Heart size={13} filled={isFavorite} />
+        </button>
+        <button type="button" className="img-overlay-btn" onClick={() => onShare(product)} aria-label="مشاركة المنتج">
+          <Icons.Share size={12} />
+        </button>
+      </div>
     </div>
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
-      <div className="card-name-row">
-        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{product.name}</h3>
-        <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
-          <button type="button" className={`card-icon-btn ${isFavorite ? 'is-favorite' : ''}`} onClick={() => onToggleFavorite(product)} aria-label="إضافة للمفضلة">
-            <Icons.Heart filled={isFavorite} />
-          </button>
-          <button type="button" className="card-icon-btn" onClick={() => onShare(product)} aria-label="مشاركة المنتج">
-            <Icons.Share />
-          </button>
-        </div>
-      </div>
+      <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{product.name}</h3>
       {extraLine}
       <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {product.price * qty} ر.س</span>
     </div>
@@ -118,7 +116,19 @@ const CustomerView = () => {
 
   const { search } = useLocation();
   const tableNumber = new URLSearchParams(search).get("table") || "1";
+  const sharedProductId = new URLSearchParams(search).get("product");
   const TRACKING_STEPS = ["تم الاستلام", "تم الدفع", "يتم التحضير", "جاهز للاستلام"];
+
+  useEffect(() => {
+    if (!sharedProductId || products.length === 0) return;
+    const target = products.find(p => p.id === sharedProductId);
+    if (!target) return;
+    setActiveCategory(target.isCombo ? "الكل" : target.category);
+    const timer = setTimeout(() => {
+      document.getElementById(`product-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [sharedProductId, products]);
 
   const getStepIndex = (status) => {
     let s = status;
@@ -241,29 +251,19 @@ const CustomerView = () => {
   };
 
   const shareProduct = async (p) => {
+    const productUrl = `${window.location.origin}/?product=${p.id}`;
     const text = `${p.name} - ${p.price} ر.س`;
     if (navigator.share) {
-      try { await navigator.share({ title: p.name, text, url: window.location.href }); } catch { /* user cancelled */ }
+      try { await navigator.share({ title: p.name, text, url: productUrl }); } catch { /* user cancelled */ }
     } else {
       try {
-        await navigator.clipboard.writeText(text);
-        showToastMsg("تم نسخ تفاصيل المنتج للمشاركة", Icons.Clipboard);
+        await navigator.clipboard.writeText(productUrl);
+        showToastMsg("تم نسخ رابط المنتج للمشاركة", Icons.Clipboard);
       } catch { /* clipboard unavailable */ }
     }
   };
 
-  const dbCatNames = dbCategories.map(c => c.name);
-  const dynamicCats = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const missingCats = dynamicCats.filter(c => !dbCatNames.includes(c));
-  const categories = ["الكل", ...dbCatNames, ...missingCats];
-
-  const filtered = (activeCategory === "الكل" ? products : products.filter(p => p.category === activeCategory)).filter(p => !p.isCombo);
-  const grouped = filtered.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
-
-  const isSearching = searchQuery.trim().length > 0;
-  const searchResults = isSearching
-    ? products.filter(p => p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
-    : [];
+  const MOST_ORDERED_LABEL = "الأكثر طلبًا";
 
   const productOrderCounts = ordersHistory.reduce((acc, o) => {
     (o.items || []).forEach(item => { acc[item.id] = (acc[item.id] || 0) + (Number(item.qty) || 0); });
@@ -273,6 +273,19 @@ const CustomerView = () => {
     .filter(p => !p.isCombo && productOrderCounts[p.id] > 0)
     .sort((a, b) => (productOrderCounts[b.id] || 0) - (productOrderCounts[a.id] || 0))
     .slice(0, 8);
+
+  const dbCatNames = dbCategories.map(c => c.name);
+  const dynamicCats = [...new Set(products.map(p => p.category).filter(Boolean))];
+  const missingCats = dynamicCats.filter(c => !dbCatNames.includes(c));
+  const categories = ["الكل", ...(mostOrdered.length > 0 ? [MOST_ORDERED_LABEL] : []), ...dbCatNames, ...missingCats];
+
+  const filtered = (activeCategory === "الكل" ? products : products.filter(p => p.category === activeCategory)).filter(p => !p.isCombo);
+  const grouped = filtered.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
+
+  const isSearching = searchQuery.trim().length > 0;
+  const searchResults = isSearching
+    ? products.filter(p => p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
+    : [];
 
   const submitOrder = async () => {
     if (!customerName || !customerPhone) return alert("فضلاً أدخل اسمك ورقم جوالك لنتمكن من خدمتك");
@@ -346,6 +359,27 @@ const CustomerView = () => {
                 ))}
               </div>
 
+              {activeCategory === MOST_ORDERED_LABEL ? (
+                <div className="n-fade-in">
+                  <div className="section-head">
+                    <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--teal-deep)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Icons.Fire /> {MOST_ORDERED_LABEL}
+                    </h2>
+                  </div>
+                  <div className="products-grid">
+                    {mostOrdered.map((p, idx) => {
+                      const qty = cart.find(x => x.id === p.id)?.qty || 0;
+                      return (
+                        <ProductCard key={p.id} product={p} qty={qty} accent="var(--teal)" deep="var(--teal-deep)"
+                          isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
+                          onAdd={handleAddToCart} onRemove={handleRemove} delay={idx * 40} anchored
+                          extraLine={<p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>} />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+              <>
               {!loading && activeCategory === "الكل" && mostOrdered.length > 0 && (
                 <div className="n-rise" style={{ '--d': '10ms' }}>
                   <div className="section-head">
@@ -381,7 +415,7 @@ const CustomerView = () => {
                       return (
                         <ProductCard key={p.id} product={p} qty={qty} accent="var(--berry)" deep="var(--berry-deep)"
                           isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
-                          onAdd={handleAddToCart} onRemove={handleRemove} delay={idx * 50}
+                          onAdd={handleAddToCart} onRemove={handleRemove} delay={idx * 50} anchored
                           className="combo-card" cardStyle={{ minWidth: '280px', maxWidth: '280px', flexShrink: 0 }}
                           badge={<span className="combo-ribbon">عرض خاص</span>}
                           extraLine={p.comboItems?.length > 0 && (
@@ -416,7 +450,7 @@ const CustomerView = () => {
                         return (
                           <ProductCard key={p.id} product={p} qty={qty} accent={style.accent} deep={style.deep}
                             isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
-                            onAdd={handleAddToCart} onRemove={handleRemove} delay={catIdx * 70 + pIdx * 40}
+                            onAdd={handleAddToCart} onRemove={handleRemove} delay={catIdx * 70 + pIdx * 40} anchored
                             extraLine={<p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>} />
                         );
                       })}
@@ -424,6 +458,8 @@ const CustomerView = () => {
                   </div>
                 );
               })}
+              </>
+              )}
             </>
           )}
         </>
