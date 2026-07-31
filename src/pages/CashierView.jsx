@@ -10,7 +10,6 @@ const Icons = {
   Check: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>,
   VolumeUp: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
   VolumeMute: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>,
-  Lock: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
   Logout: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
   X: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
 };
@@ -24,7 +23,7 @@ const GlobalStyle = () => (
     .tabs-container { display: flex; background: rgba(255,255,255,0.06); border-radius: 14px; padding: 6px; gap: 5px; overflow-x: auto; }
     .tab-btn { padding: 10px 18px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; color: #9BA6B8; display: flex; align-items: center; gap: 8px; transition: 0.25s; border: 1px solid transparent; white-space: nowrap; }
     .tab-btn.active { background: white; color: var(--ink); box-shadow: var(--shadow-sm); }
-    .badge { color: white; font-size: 11px; padding: 2px 8px; border-radius: var(--r-full); font-weight: 900; margin-right: 5px; font-family: var(--font-mono); }
+    .badge { color: white; font-size: 11px; padding: 2px 8px; border-radius: var(--r-full); font-weight: 900; margin-right: 5px; }
 
     .content-area { flex: 1; display: flex; overflow: hidden; background: var(--paper); }
     .orders-grid { padding: 26px; display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 18px; overflow-y: auto; height: 100%; align-content: start; width: 100%; }
@@ -195,7 +194,7 @@ const CashierView = () => {
             <div style={{ marginTop: '5px' }}>
               <div style={{ fontSize: '13px', color: 'var(--ink-soft)', fontWeight: '900' }}>{order.customerName || "ضيف"}</div>
               {order.customerPhone && (
-                <div style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: 'bold', marginTop: '2px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>
+                <div style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: 'bold', marginTop: '2px', letterSpacing: '1px' }}>
                   📞 {order.customerPhone}
                 </div>
               )}
@@ -236,10 +235,7 @@ const CashierView = () => {
         <GlobalStyle />
         <div className="login-box n-rise">
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
-            <img src="/logo.png" alt="Nekter" style={{ height: '48px', objectFit: 'contain' }} />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px', color: 'var(--line)' }}>
-            <Icons.Lock />
+            <img src="/logo.png" alt="Nekter" style={{ height: '52px', objectFit: 'contain', filter: 'brightness(0)' }} />
           </div>
           <h2 style={{ margin: '0 0 20px 0', color: 'var(--ink)' }}>تسجيل الدخول للنظام</h2>
 
@@ -250,7 +246,7 @@ const CashierView = () => {
 
           <form onSubmit={handleLogin}>
             {loginTab === "كاشير" ? (
-              <input type="password" required maxLength="4" placeholder="أدخل رمز الـ PIN (4 أرقام)" className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '18px', fontFamily: 'var(--font-mono)' }}
+              <input type="password" required maxLength="4" placeholder="أدخل رمز الـ PIN (4 أرقام)" className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '18px' }}
                 value={loginData.pin} onChange={e => setLoginData({ ...loginData, pin: e.target.value })} />
             ) : (
               <>
@@ -348,7 +344,7 @@ const CashierView = () => {
               {currentUser.role === 'كاشير' && (
                 <>
                   <label className="n-label">تغيير رمز الـ PIN</label>
-                  <input required maxLength="4" className="n-input" style={{ marginBottom: '15px', letterSpacing: '3px', fontFamily: 'var(--font-mono)' }}
+                  <input required maxLength="4" className="n-input" style={{ marginBottom: '15px', letterSpacing: '3px' }}
                     value={profileForm.pin} onChange={e => setProfileForm({ ...profileForm, pin: e.target.value })} />
                 </>
               )}
@@ -369,7 +365,7 @@ const CashierView = () => {
             <h2 style={{ marginTop: 0, color: 'var(--ink)' }}>🎁 استبدال نقاط عميل</h2>
             <p style={{ color: 'var(--ink-faint)', fontSize: '13px', marginBottom: '18px' }}>اطلب من العميل الكود اللي طلع له بعد الاستبدال</p>
             <form onSubmit={handleRedeemCode}>
-              <input required className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', fontFamily: 'var(--font-mono)', marginBottom: '14px', textTransform: 'uppercase' }}
+              <input required className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '14px', textTransform: 'uppercase' }}
                 placeholder="XXXXXX" value={redeemCode} onChange={e => setRedeemCode(e.target.value)} />
               <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '14px' }}>تحقق وفعّل</button>
             </form>

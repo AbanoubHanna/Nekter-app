@@ -89,7 +89,7 @@ const Invoices = ({ orders = [] }) => {
               return (
                 <React.Fragment key={o.id}>
                   <tr>
-                    <td style={{ color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>#{o.id.slice(-6).toUpperCase()}</td>
+                    <td style={{ color: 'var(--ink-faint)' }}>#{o.id.slice(-6).toUpperCase()}</td>
                     <td>{o.customerName || `طاولة ${o.tableNumber || "—"}`}</td>
                     <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{o.total} ر.س</span></td>
                     <td>{o.paymentMethod || 'كاش'}</td>
@@ -105,7 +105,7 @@ const Invoices = ({ orders = [] }) => {
                         {(o.items || []).map((item, idx) => (
                           <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '4px 0', color: 'var(--ink-soft)' }}>
                             <span>{item.qty}x {item.name}</span>
-                            <span style={{ fontFamily: 'var(--font-mono)' }}>{item.price * item.qty} ر.س</span>
+                            <span style={{  }}>{item.price * item.qty} ر.س</span>
                           </div>
                         ))}
                         {o.notes && <div style={{ marginTop: '8px', color: 'var(--danger)', fontSize: '12px', fontWeight: '700' }}>📝 {o.notes}</div>}

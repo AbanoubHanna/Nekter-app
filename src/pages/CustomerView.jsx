@@ -13,6 +13,11 @@ const Icons = {
   Plus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
   Minus: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>,
   Cart: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.39H5.12"/></svg>,
+  Heart: ({ filled }) => <svg width="17" height="17" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3.4.833-4.5 2-1.1-1.167-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>,
+  Share: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>,
+  Search: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+  Close: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  Fire: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 17a2.5 2.5 0 0 0 2.5-2.5c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7.5 7.5 0 1 1-15 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5-2.5"/></svg>,
 };
 
 // --- single brand accent (teal) for all categories, matching nekterdrinksbar.sa ---
@@ -29,18 +34,29 @@ const GlobalStyle = () => (
     .hero-wrap { position: relative; border-radius: 0 0 32px 32px; overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 22px; }
     .hero-top { background: var(--ink); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
     .hero-body { background: var(--teal); padding: 34px 20px 42px; text-align: center; }
+    .search-bar { margin: 0 20px 18px; position: relative; }
+    .search-bar input { width: 100%; padding: 13px 44px 13px 16px; border-radius: var(--r-full); border: 1.5px solid var(--line); background: var(--paper-raised); font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--ink); outline: none; transition: 0.2s; }
+    .search-bar input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px var(--teal-tint); }
+    .search-bar .search-icon { position: absolute; top: 50%; right: 16px; transform: translateY(-50%); color: var(--ink-faint); pointer-events: none; }
+    .search-bar .clear-btn { position: absolute; top: 50%; left: 14px; transform: translateY(-50%); color: var(--ink-faint); cursor: pointer; background: none; border: none; display: flex; }
     .cat-rail { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 18px; scrollbar-width: none; }
     .cat-rail::-webkit-scrollbar { display: none; }
     .cat-chip { flex-shrink: 0; padding: 10px 20px; border-radius: var(--r-full); font-weight: 800; font-size: 14px; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper-raised); color: var(--ink-soft); transition: 0.2s; }
     .cat-chip.active { background: var(--teal); color: white; border-color: var(--teal); }
     .section-head { padding: 4px 20px; display: flex; flex-direction: column; gap: 10px; margin: 22px 0 12px; }
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 20px; }
+    .product-rail { display: flex; gap: 14px; overflow-x: auto; padding: 4px 20px 18px; scrollbar-width: none; }
+    .product-rail::-webkit-scrollbar { display: none; }
     .product-card { background: var(--paper-raised); border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: row; align-items: stretch; gap: 12px; padding: 14px; box-shadow: var(--shadow-sm); transition: 0.2s; }
     .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
     .product-img-wrap { position: relative; width: 84px; height: 84px; flex-shrink: 0; border-radius: var(--r-md); overflow: hidden; background: var(--paper); }
     .product-img { width: 100%; height: 100%; object-fit: cover; }
     .qty-pill { display: flex; align-items: center; background: var(--paper); border-radius: var(--r-full); border: 1.5px solid var(--line); }
     .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
+    .card-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; }
+    .card-icon-btn { width: 25px; height: 25px; flex-shrink: 0; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-faint); transition: 0.15s; }
+    .card-icon-btn:hover { background: var(--paper); }
+    .card-icon-btn.is-favorite { color: var(--danger); }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper-raised); height: 78px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -8px 24px rgba(22,33,58,0.06); z-index: 1000; border-top: 1px solid var(--line); }
     .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-faint); cursor: pointer; transition: 0.2s; font-size: 12px; font-weight: 800; }
     .nav-item.active { color: var(--teal); }
@@ -56,6 +72,38 @@ const GlobalStyle = () => (
   `}</style>
 );
 
+const ProductCard = ({ product, qty, accent, deep, isFavorite, onToggleFavorite, onShare, onAdd, onRemove, badge, extraLine, cardStyle, delay, className = "" }) => (
+  <div className={`product-card n-rise n-hover-lift ${className}`} style={{ '--d': `${delay}ms`, position: 'relative', ...cardStyle }}>
+    {badge}
+    <div className="product-img-wrap">
+      <img src={product.image || '/logo.png'} className="product-img" alt={product.name} loading="lazy" />
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
+      <div className="card-name-row">
+        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{product.name}</h3>
+        <div style={{ display: 'flex', gap: '2px', flexShrink: 0 }}>
+          <button type="button" className={`card-icon-btn ${isFavorite ? 'is-favorite' : ''}`} onClick={() => onToggleFavorite(product)} aria-label="إضافة للمفضلة">
+            <Icons.Heart filled={isFavorite} />
+          </button>
+          <button type="button" className="card-icon-btn" onClick={() => onShare(product)} aria-label="مشاركة المنتج">
+            <Icons.Share />
+          </button>
+        </div>
+      </div>
+      {extraLine}
+      <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {product.price * qty} ر.س</span>
+    </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'space-between' }}>
+      <span className="stub" style={{ color: deep, fontSize: '17px' }}>{product.price} ر.س</span>
+      <div className="qty-pill">
+        <button className="qty-btn n-press" style={{ background: accent }} onClick={() => onAdd(product)}><Icons.Plus /></button>
+        <span style={{ width: '26px', textAlign: 'center', fontWeight: '900' }}>{qty}</span>
+        <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => onRemove(product)}><Icons.Minus /></button>
+      </div>
+    </div>
+  </div>
+);
+
 const CustomerView = () => {
   const [view, setView] = useState("menu");
   const [products, setProducts] = useState([]);
@@ -63,10 +111,14 @@ const CustomerView = () => {
   const [cart, setCart] = useState([]);
   const [activeCategory, setActiveCategory] = useState("الكل");
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [cartBounce, setCartBounce] = useState(false);
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [favorites, setFavorites] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("nekterFavorites") || "[]"); } catch { return []; }
+  });
 
   const [customerName, setCustomerName] = useState(localStorage.getItem("nekterCustomerName") || "");
   const [customerPhone, setCustomerPhone] = useState(localStorage.getItem("nekterCustomerPhone") || "");
@@ -171,10 +223,15 @@ const CustomerView = () => {
   const cartTotal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
+  const showToastMsg = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(""), 1800);
+  };
+
   const handleAddToCart = (p) => {
     const ex = cart.find(x => x.id === p.id);
     setCart(ex ? cart.map(x => x.id === p.id ? { ...ex, qty: ex.qty + 1 } : x) : [...cart, { ...p, qty: 1 }]);
-    setShowToast(true); setTimeout(() => setShowToast(false), 1800);
+    showToastMsg("تم التحديث بنجاح ✔️");
     setCartBounce(false);
     requestAnimationFrame(() => setCartBounce(true));
   };
@@ -187,8 +244,27 @@ const CustomerView = () => {
   const handleOrderAgain = (oldItems) => {
     setCart(oldItems);
     setView("menu");
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 1800);
+    showToastMsg("تم التحديث بنجاح ✔️");
+  };
+
+  const toggleFavorite = (p) => {
+    setFavorites(prev => {
+      const next = prev.includes(p.id) ? prev.filter(id => id !== p.id) : [...prev, p.id];
+      localStorage.setItem("nekterFavorites", JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const shareProduct = async (p) => {
+    const text = `${p.name} - ${p.price} ر.س`;
+    if (navigator.share) {
+      try { await navigator.share({ title: p.name, text, url: window.location.href }); } catch { /* user cancelled */ }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToastMsg("تم نسخ تفاصيل المنتج للمشاركة 📋");
+      } catch { /* clipboard unavailable */ }
+    }
   };
 
   const dbCatNames = dbCategories.map(c => c.name);
@@ -198,6 +274,20 @@ const CustomerView = () => {
 
   const filtered = (activeCategory === "الكل" ? products : products.filter(p => p.category === activeCategory)).filter(p => !p.isCombo);
   const grouped = filtered.reduce((acc, p) => { (acc[p.category] = acc[p.category] || []).push(p); return acc; }, {});
+
+  const isSearching = searchQuery.trim().length > 0;
+  const searchResults = isSearching
+    ? products.filter(p => p.name.toLowerCase().includes(searchQuery.trim().toLowerCase()))
+    : [];
+
+  const productOrderCounts = ordersHistory.reduce((acc, o) => {
+    (o.items || []).forEach(item => { acc[item.id] = (acc[item.id] || 0) + (Number(item.qty) || 0); });
+    return acc;
+  }, {});
+  const mostOrdered = products
+    .filter(p => !p.isCombo && productOrderCounts[p.id] > 0)
+    .sort((a, b) => (productOrderCounts[b.id] || 0) - (productOrderCounts[a.id] || 0))
+    .slice(0, 8);
 
   const submitOrder = async () => {
     if (!customerName || !customerPhone) return alert("فضلاً أدخل اسمك ورقم جوالك لنتمكن من خدمتك");
@@ -230,95 +320,127 @@ const CustomerView = () => {
             </div>
           </div>
 
-          <div className="cat-rail">
-            {categories.map(c => (
-              <div key={c} className={`cat-chip ${activeCategory === c ? 'active' : ''}`} onClick={() => setActiveCategory(c)}>{c}</div>
-            ))}
+          <div className="search-bar">
+            <input
+              type="text" placeholder="دور على مشروب..." value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            {searchQuery ? (
+              <button type="button" className="clear-btn" onClick={() => setSearchQuery("")} aria-label="مسح البحث"><Icons.Close /></button>
+            ) : (
+              <span className="search-icon"><Icons.Search /></span>
+            )}
           </div>
 
-          {!loading && activeCategory === "الكل" && products.some(p => p.isCombo) && (
-            <div className="n-rise" style={{ '--d': '20ms' }}>
+          {isSearching ? (
+            <div className="n-fade-in">
               <div className="section-head">
-                <h2 style={{ fontSize: '21px', fontWeight: '900', color: 'var(--berry-deep)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  🎁 عروض وكومبوهات
-                </h2>
+                <h2 style={{ fontSize: '20px', fontWeight: '900', color: 'var(--ink)', margin: 0 }}>نتائج البحث عن "{searchQuery}"</h2>
               </div>
-              <div className="combo-rail">
-                {products.filter(p => p.isCombo).map((p, idx) => {
-                  const qty = cart.find(x => x.id === p.id)?.qty || 0;
-                  return (
-                    <div key={p.id} className="product-card combo-card n-rise n-hover-lift" style={{ '--d': `${idx * 50}ms`, minWidth: '280px', maxWidth: '280px', flexShrink: 0, position: 'relative' }}>
-                      <span className="combo-ribbon">عرض خاص</span>
-                      <div className="product-img-wrap">
-                        <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
-                        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
-                        {p.comboItems?.length > 0 && (
-                          <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5' }}>
-                            {p.comboItems.map(i => `${i.qty}x ${i.name}`).join(' + ')}
-                          </p>
-                        )}
-                        <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {p.price * qty} ر.س</span>
-                      </div>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'space-between' }}>
-                        <span className="stub" style={{ color: 'var(--berry-deep)', fontSize: '17px' }}>{p.price} ر.س</span>
-                        <div className="qty-pill">
-                          <button className="qty-btn n-press" style={{ background: 'var(--berry)' }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                          <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
-                          <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {loading && (
-            <div className="products-grid">
-              {[1, 2, 3, 4].map(i => <div key={i} className="n-skeleton" style={{ height: '180px' }} />)}
-            </div>
-          )}
-
-          {!loading && categories.filter(c => c !== "الكل" && grouped[c]).map((cat, catIdx) => {
-            const temp = getTemp(cat);
-            const style = TEMP_STYLE[temp];
-            return (
-              <div key={cat} className="n-rise" style={{ '--d': `${catIdx * 70}ms` }}>
-                <div className="section-head">
-                  <span className="tag tag-neutral">{grouped[cat].length} منتجات</span>
-                  <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--ink)', margin: 0 }}>{cat}</h2>
-                </div>
+              {searchResults.length === 0 ? (
+                <p style={{ textAlign: 'center', color: 'var(--ink-faint)', marginTop: '30px' }}>مفيش منتجات متطابقة مع بحثك</p>
+              ) : (
                 <div className="products-grid">
-                  {grouped[cat].map((p, pIdx) => {
+                  {searchResults.map((p, pIdx) => {
                     const qty = cart.find(x => x.id === p.id)?.qty || 0;
                     return (
-                      <div key={p.id} className="product-card n-rise n-hover-lift" style={{ '--d': `${catIdx * 70 + pIdx * 40}ms` }}>
-                        <div className="product-img-wrap">
-                          <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, minWidth: 0 }}>
-                          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
-                          <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>
-                          <span style={{ fontSize: '12px', color: 'var(--ink-faint)', fontWeight: '700' }}>الإجمالي: {p.price * qty} ر.س</span>
-                        </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', justifyContent: 'space-between' }}>
-                          <span className="stub" style={{ color: style.deep, fontSize: '17px' }}>{p.price} ر.س</span>
-                          <div className="qty-pill">
-                            <button className="qty-btn n-press" style={{ background: style.accent }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                            <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
-                            <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
-                          </div>
-                        </div>
-                      </div>
+                      <ProductCard key={p.id} product={p} qty={qty} accent="var(--teal)" deep="var(--teal-deep)"
+                        isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
+                        onAdd={handleAddToCart} onRemove={handleRemove} delay={pIdx * 40}
+                        extraLine={<p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>} />
                     );
                   })}
                 </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="cat-rail">
+                {categories.map(c => (
+                  <div key={c} className={`cat-chip ${activeCategory === c ? 'active' : ''}`} onClick={() => setActiveCategory(c)}>{c}</div>
+                ))}
               </div>
-            );
-          })}
+
+              {!loading && activeCategory === "الكل" && mostOrdered.length > 0 && (
+                <div className="n-rise" style={{ '--d': '10ms' }}>
+                  <div className="section-head">
+                    <h2 style={{ fontSize: '21px', fontWeight: '900', color: 'var(--teal-deep)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Icons.Fire /> الأكثر طلبًا
+                    </h2>
+                  </div>
+                  <div className="product-rail">
+                    {mostOrdered.map((p, idx) => {
+                      const qty = cart.find(x => x.id === p.id)?.qty || 0;
+                      return (
+                        <ProductCard key={p.id} product={p} qty={qty} accent="var(--teal)" deep="var(--teal-deep)"
+                          isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
+                          onAdd={handleAddToCart} onRemove={handleRemove} delay={idx * 50}
+                          cardStyle={{ minWidth: '280px', maxWidth: '280px', flexShrink: 0 }}
+                          extraLine={<p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>} />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {!loading && activeCategory === "الكل" && products.some(p => p.isCombo) && (
+                <div className="n-rise" style={{ '--d': '20ms' }}>
+                  <div className="section-head">
+                    <h2 style={{ fontSize: '21px', fontWeight: '900', color: 'var(--berry-deep)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      🎁 كومبو اللمة
+                    </h2>
+                  </div>
+                  <div className="product-rail">
+                    {products.filter(p => p.isCombo).map((p, idx) => {
+                      const qty = cart.find(x => x.id === p.id)?.qty || 0;
+                      return (
+                        <ProductCard key={p.id} product={p} qty={qty} accent="var(--berry)" deep="var(--berry-deep)"
+                          isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
+                          onAdd={handleAddToCart} onRemove={handleRemove} delay={idx * 50}
+                          className="combo-card" cardStyle={{ minWidth: '280px', maxWidth: '280px', flexShrink: 0 }}
+                          badge={<span className="combo-ribbon">عرض خاص</span>}
+                          extraLine={p.comboItems?.length > 0 && (
+                            <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5' }}>
+                              {p.comboItems.map(i => `${i.qty}x ${i.name}`).join(' + ')}
+                            </p>
+                          )} />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {loading && (
+                <div className="products-grid">
+                  {[1, 2, 3, 4].map(i => <div key={i} className="n-skeleton" style={{ height: '180px' }} />)}
+                </div>
+              )}
+
+              {!loading && categories.filter(c => c !== "الكل" && grouped[c]).map((cat, catIdx) => {
+                const temp = getTemp(cat);
+                const style = TEMP_STYLE[temp];
+                return (
+                  <div key={cat} className="n-rise" style={{ '--d': `${catIdx * 70}ms` }}>
+                    <div className="section-head">
+                      <span className="tag tag-neutral">{grouped[cat].length} منتجات</span>
+                      <h2 style={{ fontSize: '22px', fontWeight: '900', color: 'var(--ink)', margin: 0 }}>{cat}</h2>
+                    </div>
+                    <div className="products-grid">
+                      {grouped[cat].map((p, pIdx) => {
+                        const qty = cart.find(x => x.id === p.id)?.qty || 0;
+                        return (
+                          <ProductCard key={p.id} product={p} qty={qty} accent={style.accent} deep={style.deep}
+                            isFavorite={favorites.includes(p.id)} onToggleFavorite={toggleFavorite} onShare={shareProduct}
+                            onAdd={handleAddToCart} onRemove={handleRemove} delay={catIdx * 70 + pIdx * 40}
+                            extraLine={<p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5' }}>{p.description}</p>} />
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
         </>
       ) : (
         <div style={{ padding: '20px' }}>
@@ -368,7 +490,7 @@ const CustomerView = () => {
               return (
                 <div key={o.id} className="order-ticket n-fade-in">
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--ink-faint)', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>#{o.id.slice(-6).toUpperCase()}</span>
+                    <span style={{ color: 'var(--ink-faint)', fontSize: '13px' }}>#{o.id.slice(-6).toUpperCase()}</span>
                     <span className="stub" style={{ color: 'var(--teal-deep)' }}>{o.total} ر.س</span>
                   </div>
 
@@ -426,7 +548,7 @@ const CustomerView = () => {
               {selectedOrderDetails.items.map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
                   <span style={{ color: 'var(--ink-soft)', fontWeight: '600' }}>{item.name} <small style={{ color: 'var(--ink-faint)' }}>x{item.qty}</small></span>
-                  <span style={{ fontWeight: '800', color: 'var(--teal-deep)', fontFamily: 'var(--font-mono)' }}>{item.price * item.qty} ر.س</span>
+                  <span style={{ fontWeight: '800', color: 'var(--teal-deep)' }}>{item.price * item.qty} ر.س</span>
                 </div>
               ))}
             </div>
@@ -476,7 +598,7 @@ const CustomerView = () => {
               {cart.map(i => (
                 <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
                   <span style={{ color: 'var(--ink-soft)' }}>{i.name} <small>x{i.qty}</small></span>
-                  <span style={{ fontWeight: '700', fontFamily: 'var(--font-mono)' }}>{i.price * i.qty} ر.س</span>
+                  <span style={{ fontWeight: '700' }}>{i.price * i.qty} ر.س</span>
                 </div>
               ))}
               <div style={{ height: '1px', background: 'var(--line)', margin: '14px 0' }} />
@@ -508,7 +630,7 @@ const CustomerView = () => {
         </div>
       )}
 
-      {showToast && <div className="n-toast">تم التحديث بنجاح ✔️</div>}
+      {toastMsg && <div className="n-toast">{toastMsg}</div>}
     </div>
   );
 };

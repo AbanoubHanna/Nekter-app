@@ -48,7 +48,7 @@ const AuditLog = () => {
             {filtered.map(l => (
               <React.Fragment key={l.id}>
                 <tr>
-                  <td style={{ fontSize: '13px', fontFamily: 'var(--font-mono)' }}>{l.actor_email}</td>
+                  <td style={{ fontSize: '13px' }}>{l.actor_email}</td>
                   <td><span className={`tag ${ACTION_TAG[l.action]}`}>{ACTION_LABELS[l.action] || l.action}</span></td>
                   <td>{TABLE_LABELS[l.table_name] || l.table_name}: <b>{summarize(l)}</b></td>
                   <td style={{ fontSize: '12px', color: 'var(--ink-faint)' }}>{new Date(l.created_at).toLocaleString('ar-EG')}</td>
@@ -61,7 +61,7 @@ const AuditLog = () => {
                 {expanded === l.id && (
                   <tr>
                     <td colSpan={5} style={{ background: 'var(--paper)', padding: '16px 20px' }}>
-                      <pre style={{ margin: 0, fontSize: '12px', fontFamily: 'var(--font-mono)', whiteSpace: 'pre-wrap', color: 'var(--ink-soft)' }}>
+                      <pre style={{ margin: 0, fontSize: '12px', whiteSpace: 'pre-wrap', color: 'var(--ink-soft)' }}>
 {JSON.stringify({ قبل: l.old_data, بعد: l.new_data }, null, 2)}
                       </pre>
                     </td>

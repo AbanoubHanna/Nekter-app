@@ -232,7 +232,7 @@ const Inventory = ({ products, categories }) => {
                   <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{p.price} ر.س</span></td>
                   <td>
                     {p.trackStock ? (
-                      <span style={{ fontWeight: '800', fontFamily: 'var(--font-mono)', color: isLow ? 'var(--danger)' : 'var(--ink)' }}>
+                      <span style={{ fontWeight: '800', color: isLow ? 'var(--danger)' : 'var(--ink)' }}>
                         {p.stock} {isLow && '⚠️'}
                       </span>
                     ) : <span style={{ color: 'var(--ink-faint)', fontSize: '12px' }}>غير متتبَّع</span>}

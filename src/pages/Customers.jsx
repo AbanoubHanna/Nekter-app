@@ -76,7 +76,7 @@ const Customers = ({ orders }) => {
               return (
                 <tr key={i}>
                   <td><b>{c.name}</b></td>
-                  <td style={{ fontFamily: 'var(--font-mono)', letterSpacing: '1px', color: 'var(--ink-soft)' }}>{c.phone}</td>
+                  <td style={{ letterSpacing: '1px', color: 'var(--ink-soft)' }}>{c.phone}</td>
                   <td><span className={`tag ${tier.tag}`}>{tier.name}</span></td>
                   <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{c.total.toLocaleString()} ر.س</span></td>
                   <td style={{ color: 'var(--ink-faint)', fontSize: '13px' }}>{c.lastOrder ? c.lastOrder.toLocaleDateString('ar-EG') : '—'}</td>
@@ -100,7 +100,7 @@ const Customers = ({ orders }) => {
               {selectedCustomer.name.charAt(0)}
             </div>
             <h2 style={{ margin: '0 0 5px 0', color: 'var(--ink)', fontSize: '20px' }}>{selectedCustomer.name}</h2>
-            <div style={{ color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)', marginBottom: '15px' }}>{selectedCustomer.phone}</div>
+            <div style={{ color: 'var(--ink-faint)', marginBottom: '15px' }}>{selectedCustomer.phone}</div>
 
             <div style={{ background: 'var(--paper)', padding: '15px', borderRadius: 'var(--r-lg)', marginBottom: '20px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <div><div style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>الإنفاق</div><b style={{ color: 'var(--teal-deep)' }}>{selectedCustomer.total} ر.س</b></div>

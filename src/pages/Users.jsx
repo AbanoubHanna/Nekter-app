@@ -64,7 +64,7 @@ const Users = ({ users, onChange, adminRole }) => {
               <tr key={u.id}>
                 <td><b>{u.name}</b></td>
                 <td><span className={`tag ${u.role === 'مدير' ? 'tag-hot' : 'tag-cold'}`}>{u.role}</span></td>
-                <td style={{ letterSpacing: '2px', fontWeight: 'bold', fontFamily: 'var(--font-mono)' }}>{u.pin}</td>
+                <td style={{ letterSpacing: '2px', fontWeight: 'bold' }}>{u.pin}</td>
                 <td>
                   <button onClick={() => toggleStatus(u)} className="tag" style={{ border: 'none', cursor: 'pointer', background: u.status === 'نشط' ? 'var(--success-tint)' : 'var(--danger-tint)', color: u.status === 'نشط' ? 'var(--success)' : 'var(--danger)' }}>
                     {u.status}
@@ -100,7 +100,7 @@ const Users = ({ users, onChange, adminRole }) => {
               </select>
 
               <label className="n-label">رمز الدخول (PIN)</label>
-              <input required type="number" className="n-input" style={{ textAlign: 'center', letterSpacing: '3px', marginBottom: '18px', fontFamily: 'var(--font-mono)' }} value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
+              <input required type="number" className="n-input" style={{ textAlign: 'center', letterSpacing: '3px', marginBottom: '18px' }} value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
 
               <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '14px' }}>
                 {modalMode === 'add' ? 'إضافة للنظام' : 'حفظ التعديلات'}

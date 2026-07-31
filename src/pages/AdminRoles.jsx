@@ -36,7 +36,7 @@ const AdminRoles = () => {
           <tbody>
             {admins.map(a => (
               <tr key={a.id}>
-                <td style={{ direction: 'ltr', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '13px' }}>{a.email}</td>
+                <td style={{ direction: 'ltr', textAlign: 'right', fontSize: '13px' }}>{a.email}</td>
                 <td><span className={`tag ${a.role === 'مدير عام' ? 'tag-hot' : 'tag-cold'}`}>{a.role === 'مدير عام' ? '👑' : '🛡️'} {a.role}</span></td>
                 <td style={{ fontSize: '12px', color: 'var(--ink-faint)' }}>{new Date(a.created_at).toLocaleDateString('ar-EG')}</td>
                 <td style={{ textAlign: 'center' }}>

@@ -5,7 +5,7 @@
    Amber is reserved for the loyalty/points context only.
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
 
 :root {
   /* --- surface & ink --- */
@@ -47,21 +47,20 @@
 
   /* --- type --- */
   --font-display: 'Cairo', sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
 }
 
 * { box-sizing: border-box; }
 body { font-family: var(--font-display); }
 
 /* =========================================================
-   PRICE / NUMBER READOUT — plain bold mono figure, no box.
+   PRICE / NUMBER READOUT — plain bold figure, no box.
    Used for every price, order total and order code.
    ========================================================= */
 .stub {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
   font-weight: 800;
   white-space: nowrap;
 }
@@ -86,8 +85,6 @@ body { font-family: var(--font-display); }
   font-size: 11px; font-weight: 900; padding: 4px 12px 4px 16px; border-radius: var(--r-sm) 0 0 var(--r-sm);
   box-shadow: var(--shadow-sm); z-index: 2;
 }
-.combo-rail { display: flex; gap: 14px; overflow-x: auto; padding: 4px 20px 18px; scrollbar-width: none; }
-.combo-rail::-webkit-scrollbar { display: none; }
 
 /* =========================================================
    PRIMITIVES reused everywhere

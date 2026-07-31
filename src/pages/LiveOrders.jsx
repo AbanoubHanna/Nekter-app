@@ -52,7 +52,7 @@ const LiveOrders = ({ orders }) => {
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', borderBottom: '1px dashed var(--line)', paddingBottom: '10px' }}>
                         <div>
                           <b style={{ fontSize: '14px', color: 'var(--ink)', display: 'block' }}>{order.customerName || "عميل بدون اسم"}</b>
-                          <span style={{ fontSize: '11px', color: 'var(--ink-faint)', fontFamily: 'var(--font-mono)' }}>#{order.id.slice(-5).toUpperCase()}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--ink-faint)' }}>#{order.id.slice(-5).toUpperCase()}</span>
                         </div>
                         <div style={{ textAlign: 'left' }}>
                           <span style={{ display: 'block', background: col.tint, color: col.color, padding: '4px 10px', borderRadius: 'var(--r-sm)', fontSize: '12px', fontWeight: 'bold' }}>
