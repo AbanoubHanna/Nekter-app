@@ -162,6 +162,16 @@ const CashierView = () => {
     }
   };
 
+  const cancelOrder = async (orderId) => {
+    if (!window.confirm("متأكد إنك عايز تلغي/تسترجع الطلب ده؟ الإجراء ده مش هيتحسب في المبيعات ونقاط العميل، ومينفعش يترجع.")) return;
+    try {
+      const { error } = await supabase.from('orders').update({ status: "ملغي", last_updated: new Date().toISOString() }).eq('id', orderId);
+      if (error) throw error;
+    } catch (error) {
+      alert("حدث خطأ أثناء إلغاء الطلب!");
+    }
+  };
+
   const renderOrdersGrid = () => {
     const currentConfig = stagesConfig[viewMode];
     const displayOrders = currentConfig.data;
@@ -213,6 +223,9 @@ const CashierView = () => {
 
         <button className="action-btn n-press" style={{ background: currentConfig.color }} onClick={() => advanceOrderState(order.id, viewMode)}>
           {currentConfig.btnText}
+        </button>
+        <button className="n-btn n-btn-ghost" style={{ width: '100%', padding: '8px', fontSize: '12.5px', color: 'var(--danger)' }} onClick={() => cancelOrder(order.id)}>
+          <Icons.Close size={13} /> إلغاء / استرجاع الطلب
         </button>
       </div>
     ));

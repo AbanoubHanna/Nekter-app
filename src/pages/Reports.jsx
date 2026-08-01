@@ -16,13 +16,14 @@ const Reports = ({ orders, products }) => {
   const [range, setRange] = useState("week");
 
   const filteredOrders = useMemo(() => {
-    if (range === "all") return orders;
+    const validOrders = orders.filter(o => o.status !== "ملغي");
+    if (range === "all") return validOrders;
     const now = new Date();
     const cutoff = new Date();
     if (range === "today") cutoff.setHours(0, 0, 0, 0);
     if (range === "week") cutoff.setDate(now.getDate() - 7);
     if (range === "month") cutoff.setDate(now.getDate() - 30);
-    return orders.filter(o => getOrderDate(o) >= cutoff);
+    return validOrders.filter(o => getOrderDate(o) >= cutoff);
   }, [orders, range]);
 
   const totalSales = filteredOrders.reduce((acc, curr) => acc + (Number(curr.total) || 0), 0);

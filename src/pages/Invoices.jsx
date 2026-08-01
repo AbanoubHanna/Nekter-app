@@ -38,7 +38,7 @@ const Invoices = ({ orders = [] }) => {
     return list;
   }, [orders, range, search]);
 
-  const totalRevenue = filtered.reduce((s, o) => s + (Number(o.total) || 0), 0);
+  const totalRevenue = filtered.filter(o => o.status !== "ملغي").reduce((s, o) => s + (Number(o.total) || 0), 0);
 
   const exportExcel = () => {
     const rows = filtered.map(o => ({
@@ -94,7 +94,7 @@ const Invoices = ({ orders = [] }) => {
                     <td>{o.customerName || `طاولة ${o.tableNumber || "—"}`}</td>
                     <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{o.total} ر.س</span></td>
                     <td>{o.paymentMethod || 'كاش'}</td>
-                    <td><span className="tag tag-neutral">{o.status || '—'}</span></td>
+                    <td><span className={`tag ${o.status === "ملغي" ? 'tag-hot' : 'tag-neutral'}`}>{o.status || '—'}</span></td>
                     <td style={{ fontSize: '12px', color: 'var(--ink-faint)' }}>{d ? d.toLocaleString('ar-EG') : 'الآن'}</td>
                     <td style={{ textAlign: 'center' }}>
                       <button className="n-btn n-btn-ghost" style={{ padding: '4px 10px', fontSize: '13px' }} onClick={() => setExpandedId(isOpen ? null : o.id)}>{isOpen ? '▲' : '▼'}</button>

@@ -17,7 +17,7 @@ const matchStatus = (orderStatus, colId) => {
 };
 
 const LiveOrders = ({ orders }) => {
-  const activeOrders = orders.filter(o => o.status !== "مكتمل");
+  const activeOrders = orders.filter(o => o.status !== "مكتمل" && o.status !== "ملغي");
 
   return (
     <div className="n-fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column' }}>

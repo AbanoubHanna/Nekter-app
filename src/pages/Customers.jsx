@@ -17,7 +17,7 @@ const Customers = ({ orders }) => {
     return `0${clean}`;
   };
 
-  const customersMap = orders.reduce((acc, o) => {
+  const customersMap = orders.filter(o => o.status !== "ملغي").reduce((acc, o) => {
     const phone = normalizePhone(o.customerPhone);
     if (phone === "بدون رقم") return acc;
 

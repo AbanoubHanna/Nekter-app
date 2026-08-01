@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { supabase, mapOrderedRow, toSnakeRow } from "../supabase";
 import { useLocation } from "react-router-dom";
 import ConfettiBurst from "../components/ConfettiBurst";
@@ -113,6 +113,7 @@ const CustomerView = () => {
   const [rewards, setRewards] = useState([]);
   const [redemptions, setRedemptions] = useState([]);
   const [redeemedCode, setRedeemedCode] = useState(null);
+  const prevOrderStepsRef = useRef(null);
 
   const { search } = useLocation();
   const tableNumber = new URLSearchParams(search).get("table") || "1";
@@ -165,10 +166,33 @@ const CustomerView = () => {
       const allOrders = data.map(mapOrderedRow);
       setOrdersHistory(allOrders);
       if (customerPhone) {
-        const totalSpent = allOrders
-          .filter(o => o.customerPhone === customerPhone)
-          .reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+        const myCurrentOrders = allOrders.filter(o => o.customerPhone === customerPhone);
+        const totalSpent = myCurrentOrders.filter(o => o.status !== "ملغي").reduce((sum, o) => sum + (Number(o.total) || 0), 0);
         setUserPoints(Math.floor(totalSpent / 10));
+
+        const prevSteps = prevOrderStepsRef.current;
+        const nextSteps = {};
+        myCurrentOrders.forEach(o => { nextSteps[o.id] = getStepIndex(o.status); });
+        if (prevSteps) {
+          myCurrentOrders.forEach(o => {
+            const wasReady = prevSteps[o.id] === 3;
+            const isReady = nextSteps[o.id] === 3;
+            if (isReady && !wasReady) {
+              try {
+                if ("Notification" in window && Notification.permission === "granted") {
+                  new Notification("طلبك جاهز! 🎉", { body: `طلبك من نكتير جاهز للاستلام على طاولتك.` });
+                }
+                new Audio('/notification.mp3').play().catch(() => {});
+              } catch { /* notification unavailable */ }
+              showToastMsg("طلبك جاهز للاستلام!", Icons.CheckCircle);
+            }
+          });
+        }
+        prevOrderStepsRef.current = nextSteps;
+
+        if ("Notification" in window && Notification.permission === "default") {
+          Notification.requestPermission();
+        }
       }
     };
 
@@ -532,23 +556,29 @@ const CustomerView = () => {
                     <span className="stub" style={{ color: 'var(--teal-deep)' }}>{o.total} ر.س</span>
                   </div>
 
-                  <div className="progress-rail">
-                    <div className="progress-line-bg" />
-                    <div className="progress-line-fg" style={{ width: `${(currentStep / (TRACKING_STEPS.length - 1)) * 100}%` }} />
-                    <div className="progress-steps">
-                      {TRACKING_STEPS.map((stepName, idx) => {
-                        const isCompleted = idx <= currentStep;
-                        return (
-                          <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <div className={`progress-dot ${isCompleted ? 'done' : ''}`}>
-                              {isCompleted && <div style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--teal)' }} />}
-                            </div>
-                            <div style={{ marginTop: '8px', fontSize: '10.5px', fontWeight: '800', color: isCompleted ? 'var(--teal-deep)' : 'var(--ink-faint)', textAlign: 'center', maxWidth: '60px' }}>{stepName}</div>
-                          </div>
-                        );
-                      })}
+                  {o.status === "ملغي" ? (
+                    <div style={{ background: 'var(--danger-tint)', color: 'var(--danger)', borderRadius: 'var(--r-md)', padding: '14px', textAlign: 'center', fontWeight: '800', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                      <Icons.AlertTriangle size={16} /> تم إلغاء هذا الطلب
                     </div>
-                  </div>
+                  ) : (
+                    <div className="progress-rail">
+                      <div className="progress-line-bg" />
+                      <div className="progress-line-fg" style={{ width: `${(currentStep / (TRACKING_STEPS.length - 1)) * 100}%` }} />
+                      <div className="progress-steps">
+                        {TRACKING_STEPS.map((stepName, idx) => {
+                          const isCompleted = idx <= currentStep;
+                          return (
+                            <div key={idx} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                              <div className={`progress-dot ${isCompleted ? 'done' : ''}`}>
+                                {isCompleted && <div style={{ width: '9px', height: '9px', borderRadius: '50%', background: 'var(--teal)' }} />}
+                              </div>
+                              <div style={{ marginTop: '8px', fontSize: '10.5px', fontWeight: '800', color: isCompleted ? 'var(--teal-deep)' : 'var(--ink-faint)', textAlign: 'center', maxWidth: '60px' }}>{stepName}</div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '10px' }}>
                     <button className="n-btn n-btn-outline" style={{ padding: '12px' }} onClick={() => setSelectedOrderDetails(o)}><Icons.Receipt size={16} /> تفاصيل الطلب</button>
