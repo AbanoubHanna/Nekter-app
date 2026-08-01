@@ -9,7 +9,7 @@ const Users = ({ users, onChange, adminRole }) => {
   const [search, setSearch] = useState("");
 
   const openEdit = (u) => {
-    setForm({ id: u.id, name: u.name, role: u.role, pin: u.pin, status: u.status });
+    setForm({ id: u.id, name: u.name, role: u.role, pin: "", status: u.status });
     setModalMode('edit');
     setShowModal(true);
   };
@@ -19,7 +19,7 @@ const Users = ({ users, onChange, adminRole }) => {
     if (modalMode === 'add') {
       await supabase.rpc('rpc_add_staff', { p_name: form.name, p_role: form.role, p_pin: form.pin });
     } else {
-      await supabase.rpc('rpc_update_staff', { p_id: form.id, p_name: form.name, p_role: form.role, p_pin: form.pin, p_photo: form.photo || "" });
+      await supabase.rpc('rpc_update_staff', { p_id: form.id, p_name: form.name, p_role: form.role, p_pin: form.pin || null, p_photo: form.photo || "" });
     }
     setShowModal(false);
     setForm({ id: "", name: "", role: "كاشير", pin: "", status: "نشط" });
@@ -54,13 +54,12 @@ const Users = ({ users, onChange, adminRole }) => {
 
       <div className="n-card" style={{ padding: 0, overflow: 'hidden' }}>
         <table>
-          <thead><tr><th>الاسم</th><th>الصلاحية</th><th>رمز PIN</th><th>الحالة</th><th style={{ textAlign: 'center' }}>إجراءات</th></tr></thead>
+          <thead><tr><th>الاسم</th><th>الصلاحية</th><th>الحالة</th><th style={{ textAlign: 'center' }}>إجراءات</th></tr></thead>
           <tbody>
             {filteredUsers.map(u => (
               <tr key={u.id}>
                 <td><b>{u.name}</b></td>
                 <td><span className={`tag ${u.role === 'مدير' ? 'tag-hot' : 'tag-cold'}`}>{u.role}</span></td>
-                <td style={{ letterSpacing: '2px', fontWeight: 'bold' }}>{u.pin}</td>
                 <td>
                   <button onClick={() => toggleStatus(u)} className="tag" style={{ border: 'none', cursor: 'pointer', background: u.status === 'نشط' ? 'var(--success-tint)' : 'var(--danger-tint)', color: u.status === 'نشط' ? 'var(--success)' : 'var(--danger)' }}>
                     {u.status}
@@ -75,7 +74,7 @@ const Users = ({ users, onChange, adminRole }) => {
               </tr>
             ))}
             {filteredUsers.length === 0 && (
-              <tr><td colSpan={5} style={{ textAlign: 'center', padding: '30px', color: 'var(--ink-faint)' }}>لا يوجد موظفين مطابقين</td></tr>
+              <tr><td colSpan={4} style={{ textAlign: 'center', padding: '30px', color: 'var(--ink-faint)' }}>لا يوجد موظفين مطابقين</td></tr>
             )}
           </tbody>
         </table>
@@ -92,11 +91,10 @@ const Users = ({ users, onChange, adminRole }) => {
               <label className="n-label">الصلاحية</label>
               <select className="n-select" style={{ marginBottom: '14px' }} value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
                 <option value="كاشير">كاشير</option>
-                <option value="مدير">مدير</option>
               </select>
 
-              <label className="n-label">رمز الدخول (PIN)</label>
-              <input required type="number" className="n-input" style={{ textAlign: 'center', letterSpacing: '3px', marginBottom: '18px' }} value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
+              <label className="n-label">{modalMode === 'add' ? 'رمز الدخول (PIN)' : 'رمز PIN جديد (سيبه فاضي لو مش عايز تغيّره)'}</label>
+              <input required={modalMode === 'add'} type="number" placeholder={modalMode === 'add' ? '' : '••••'} className="n-input" style={{ textAlign: 'center', letterSpacing: '3px', marginBottom: '18px' }} value={form.pin} onChange={e => setForm({ ...form, pin: e.target.value })} />
 
               <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '14px' }}>
                 {modalMode === 'add' ? 'إضافة للنظام' : 'حفظ التعديلات'}

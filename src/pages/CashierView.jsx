@@ -40,8 +40,7 @@ const GlobalStyle = () => (
 
 const CashierView = () => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loginTab, setLoginTab] = useState("كاشير");
-  const [loginData, setLoginData] = useState({ pin: "", email: "", password: "" });
+  const [loginData, setLoginData] = useState({ pin: "" });
 
   const [viewMode, setViewMode] = useState("تم الاستلام");
   const [orders, setOrders] = useState([]);
@@ -71,9 +70,7 @@ const CashierView = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = loginTab === "كاشير"
-        ? await supabase.rpc('rpc_login_cashier', { p_pin: loginData.pin })
-        : await supabase.rpc('rpc_login_manager', { p_email: loginData.email, p_password: loginData.password });
+      const { data, error } = await supabase.rpc('rpc_login_cashier', { p_pin: loginData.pin });
 
       if (error) throw error;
 
@@ -84,10 +81,10 @@ const CashierView = () => {
           return;
         }
         setCurrentUser(userData);
-        setProfileForm({ name: userData.name, photo: userData.photo || "", pin: loginTab === "كاشير" ? loginData.pin : "" });
-        setLoginData({ pin: "", email: "", password: "" });
+        setProfileForm({ name: userData.name, photo: userData.photo || "", pin: "" });
+        setLoginData({ pin: "" });
       } else {
-        alert("بيانات الدخول غير صحيحة!");
+        alert("رمز الـ PIN غير صحيح!");
       }
     } catch (error) {
       alert("حدث خطأ في الاتصال بقاعدة البيانات.");
@@ -239,25 +236,12 @@ const CashierView = () => {
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '18px' }}>
             <img src="/logo.png" alt="Nekter" style={{ height: '52px', objectFit: 'contain', filter: 'brightness(0)' }} />
           </div>
-          <h2 style={{ margin: '0 0 20px 0', color: 'var(--ink)' }}>تسجيل الدخول للنظام</h2>
-
-          <div style={{ display: 'flex', background: 'var(--paper)', borderRadius: '14px', padding: '5px', marginBottom: '24px' }}>
-            <button className={`tab-btn ${loginTab === 'كاشير' ? 'active' : ''}`} style={{ flex: 1, justifyContent: 'center', color: loginTab === 'كاشير' ? 'var(--ink)' : 'var(--ink-faint)' }} onClick={() => setLoginTab('كاشير')}>كاشير</button>
-            <button className={`tab-btn ${loginTab === 'مدير' ? 'active' : ''}`} style={{ flex: 1, justifyContent: 'center', color: loginTab === 'مدير' ? 'var(--ink)' : 'var(--ink-faint)' }} onClick={() => setLoginTab('مدير')}>إدارة</button>
-          </div>
+          <h2 style={{ margin: '0 0 8px 0', color: 'var(--ink)' }}>تسجيل دخول الكاشير</h2>
+          <p style={{ margin: '0 0 20px 0', color: 'var(--ink-faint)', fontSize: '13px' }}>لصلاحيات الإدارة، سجّل الدخول من /admin</p>
 
           <form onSubmit={handleLogin}>
-            {loginTab === "كاشير" ? (
-              <input type="password" required maxLength="4" placeholder="أدخل رمز الـ PIN (4 أرقام)" className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '18px' }}
-                value={loginData.pin} onChange={e => setLoginData({ ...loginData, pin: e.target.value })} />
-            ) : (
-              <>
-                <input type="email" required placeholder="البريد الإلكتروني" className="n-input" style={{ textAlign: 'left', direction: 'ltr', marginBottom: '14px' }}
-                  value={loginData.email} onChange={e => setLoginData({ ...loginData, email: e.target.value })} />
-                <input type="password" required placeholder="كلمة المرور" className="n-input" style={{ textAlign: 'left', direction: 'ltr', marginBottom: '18px' }}
-                  value={loginData.password} onChange={e => setLoginData({ ...loginData, password: e.target.value })} />
-              </>
-            )}
+            <input type="password" required maxLength="4" placeholder="أدخل رمز الـ PIN (4 أرقام)" className="n-input" style={{ textAlign: 'center', letterSpacing: '4px', marginBottom: '18px' }}
+              value={loginData.pin} onChange={e => setLoginData({ ...loginData, pin: e.target.value })} />
             <button type="submit" className="n-btn n-btn-primary" style={{ width: '100%', padding: '15px', fontSize: '16px' }}>دخول للنظام</button>
           </form>
         </div>
@@ -345,8 +329,8 @@ const CashierView = () => {
 
               {currentUser.role === 'كاشير' && (
                 <>
-                  <label className="n-label">تغيير رمز الـ PIN</label>
-                  <input required maxLength="4" className="n-input" style={{ marginBottom: '15px', letterSpacing: '3px' }}
+                  <label className="n-label">رمز PIN جديد (سيبه فاضي لو مش عايز تغيّره)</label>
+                  <input maxLength="4" placeholder="••••" className="n-input" style={{ marginBottom: '15px', letterSpacing: '3px' }}
                     value={profileForm.pin} onChange={e => setProfileForm({ ...profileForm, pin: e.target.value })} />
                 </>
               )}
