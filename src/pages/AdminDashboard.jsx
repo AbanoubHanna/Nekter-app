@@ -13,6 +13,7 @@ import Invoices from "./Invoices";
 import Customers from "./Customers";
 import Users from "./Users";
 import AdminLogin from "./AdminLogin";
+import AdminSetPassword from "./AdminSetPassword";
 import AdminRoles from "./AdminRoles";
 import AuditLog from "./AuditLog";
 import Rewards from "./Rewards";
@@ -77,6 +78,9 @@ const AdminDashboard = () => {
   const [session, setSession] = useState(undefined); // undefined = still checking, null = logged out
   const [adminRole, setAdminRole] = useState(null); // 'مدير عام' | 'مشرف'
   const [activeTab, setActiveTab] = useState("reports");
+  const [needsPasswordSetup, setNeedsPasswordSetup] = useState(
+    () => new URLSearchParams(window.location.search).get('invite') === '1'
+  );
 
   // Data States
   const [orders, setOrders] = useState([]);
@@ -178,6 +182,18 @@ const AdminDashboard = () => {
 
   if (!session) {
     return <AdminLogin onLoggedIn={setSession} />;
+  }
+
+  if (needsPasswordSetup) {
+    return (
+      <AdminSetPassword
+        email={session.user.email}
+        onDone={() => {
+          setNeedsPasswordSetup(false);
+          window.history.replaceState({}, '', '/admin');
+        }}
+      />
+    );
   }
 
   return (

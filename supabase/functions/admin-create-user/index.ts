@@ -66,7 +66,16 @@ Deno.serve(async (req) => {
 
   // Elevated client — the ONLY place service_role is ever used, server-side.
   const adminClient = createClient(supabaseUrl, serviceRoleKey);
-  const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email);
+  // Supabase's project-level default Site URL is still the localhost:3000
+  // placeholder, so every invite must explicitly override where it lands —
+  // otherwise the emailed link redirects to a dead localhost address.
+  // NOTE: the exact same URL must also be added to Authentication → URL
+  // Configuration → Redirect URLs in the Supabase Dashboard, or Supabase
+  // silently ignores this override and falls back to the Site URL anyway.
+  const appUrl = Deno.env.get('APP_URL') ?? 'https://nekter-app.vercel.app';
+  const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
+    redirectTo: `${appUrl}/admin?invite=1`,
+  });
 
   if (inviteError) return json({ error: inviteError.message }, 400);
 
