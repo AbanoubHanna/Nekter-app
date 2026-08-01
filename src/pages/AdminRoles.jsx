@@ -5,6 +5,9 @@ import { Icons } from "../components/Icons";
 const AdminRoles = () => {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
+  const [inviteResult, setInviteResult] = useState(null); // { ok, message }
 
   const fetchAdmins = async () => {
     const { data } = await supabase.from('admin_profiles').select('*').order('created_at', { ascending: true });
@@ -20,6 +23,20 @@ const AdminRoles = () => {
     const { error } = await supabase.rpc('rpc_set_admin_role', { p_email: admin.email, p_role: newRole });
     if (error) { alert("مسموح لمدير عام فقط بهذا الإجراء."); return; }
     fetchAdmins();
+  };
+
+  const inviteAdmin = async (e) => {
+    e.preventDefault();
+    setInviting(true);
+    setInviteResult(null);
+    const { data, error } = await supabase.functions.invoke('admin-create-user', { body: { email: inviteEmail } });
+    setInviting(false);
+    if (error || data?.error) {
+      setInviteResult({ ok: false, message: data?.error || "حصل خطأ أثناء إرسال الدعوة" });
+      return;
+    }
+    setInviteResult({ ok: true, message: `تم إرسال دعوة إلى ${inviteEmail} — هيظهر هنا بمجرد ما يقبلها ويسجّل دخول.` });
+    setInviteEmail("");
   };
 
   return (
@@ -54,10 +71,23 @@ const AdminRoles = () => {
         </table>
       </div>
 
-      <div className="n-card" style={{ marginTop: '16px', padding: '16px 20px', background: 'var(--info-tint)', border: 'none' }}>
-        <p style={{ margin: 0, fontSize: '13px', color: 'var(--ink-soft)', fontWeight: '600', display: 'flex', gap: '8px' }}>
-          <Icons.Lightbulb size={16} /> <span>عشان تضيف مدير جديد: اطلب منه يفتح <b>Supabase Dashboard → Authentication → Add user</b> بإيميله، وبعدها يسجّل دخول مرة واحدة على /admin — هيظهر هنا تلقائيًا كـ"مشرف" وتقدر ترقّيه.</span>
+      <div className="n-card" style={{ marginTop: '16px', padding: '20px' }}>
+        <h3 style={{ margin: '0 0 4px 0', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Plus size={16} /> دعوة مدير جديد</h3>
+        <p style={{ margin: '0 0 14px 0', color: 'var(--ink-faint)', fontSize: '12.5px' }}>
+          هيوصله إيميل دعوة يحدد بيه باسوورد، وبمجرد ما يسجّل دخول مرة على /admin هيظهر هنا تلقائيًا كـ"مشرف" وتقدر ترقّيه.
         </p>
+        <form onSubmit={inviteAdmin} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <input type="email" required placeholder="بريد المدير الجديد" className="n-input" style={{ flex: 1, minWidth: '220px', margin: 0, direction: 'ltr', textAlign: 'left' }}
+            value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} />
+          <button type="submit" disabled={inviting} className="n-btn n-btn-primary" style={{ padding: '0 20px' }}>
+            {inviting ? "جاري الإرسال..." : "إرسال الدعوة"}
+          </button>
+        </form>
+        {inviteResult && (
+          <div style={{ marginTop: '12px', padding: '10px 14px', borderRadius: 'var(--r-md)', fontSize: '13px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px', background: inviteResult.ok ? 'var(--success-tint)' : 'var(--danger-tint)', color: inviteResult.ok ? 'var(--success)' : 'var(--danger)' }}>
+            {inviteResult.ok ? <Icons.Check size={15} /> : <Icons.AlertTriangle size={15} />} {inviteResult.message}
+          </div>
+        )}
       </div>
     </div>
   );
