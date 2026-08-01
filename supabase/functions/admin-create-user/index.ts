@@ -73,11 +73,29 @@ Deno.serve(async (req) => {
   // Configuration → Redirect URLs in the Supabase Dashboard, or Supabase
   // silently ignores this override and falls back to the Site URL anyway.
   const appUrl = Deno.env.get('APP_URL') ?? 'https://nekter-app.vercel.app';
-  const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${appUrl}/admin?invite=1`,
-  });
+  const redirectTo = `${appUrl}/admin?invite=1`;
+
+  const sendInvite = () => adminClient.auth.admin.inviteUserByEmail(email!, { redirectTo });
+  let { data: inviteData, error: inviteError } = await sendInvite();
+
+  // If an earlier invite to this same email never got completed (link expired,
+  // redirect was broken before this fix, etc.), Supabase refuses to send a new
+  // one because the account already exists. Self-heal: only if that account
+  // has NEVER actually logged in (proof it's a stuck, incomplete invite, not
+  // a real admin), remove it and resend a fresh invite automatically.
+  if (inviteError && /already been registered|email_exists/i.test(inviteError.message ?? inviteError.code ?? '')) {
+    const { data: list, error: listError } = await adminClient.auth.admin.listUsers();
+    const existing = list?.users?.find((u) => u.email === email);
+
+    if (!listError && existing && !existing.last_sign_in_at) {
+      await adminClient.auth.admin.deleteUser(existing.id);
+      ({ data: inviteData, error: inviteError } = await sendInvite());
+    } else if (existing) {
+      return json({ error: 'الإيميل ده عنده حساب فعّال بالفعل — اطلب منه يسجّل دخول عادي من /admin بدل الدعوة' }, 400);
+    }
+  }
 
   if (inviteError) return json({ error: inviteError.message }, 400);
 
-  return json({ success: true, userId: inviteData.user?.id });
+  return json({ success: true, userId: inviteData?.user?.id });
 });
