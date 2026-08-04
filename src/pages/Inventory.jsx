@@ -1,16 +1,11 @@
 import React, { useState, useRef } from "react";
 import { supabase, unmapOrderedRow } from "../supabase";
 import * as XLSX from 'xlsx';
-import { Icons } from "../components/Icons";
 
 const LOW_STOCK_THRESHOLD = 5;
 
-const getTemp = (categoryName = "") => {
-  if (categoryName.includes("ساخن") || categoryName.includes("قهوة")) return "hot";
-  if (categoryName.includes("آيس") || categoryName.includes("ايس") || categoryName.includes("حلو")) return "sweet";
-  return "cold";
-};
-const TAG_CLASS = { cold: "tag-cold", hot: "tag-hot", sweet: "tag-sweet" };
+const getTemp = () => "cold";
+const TAG_CLASS = { cold: "tag-cold", hot: "tag-cold", sweet: "tag-cold" };
 
 const Inventory = ({ products, categories }) => {
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +21,48 @@ const Inventory = ({ products, categories }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef(null);
+
+  const [quickPriceId, setQuickPriceId] = useState(null);
+  const [quickPriceValue, setQuickPriceValue] = useState("");
+  const [imgUploadTargetId, setImgUploadTargetId] = useState(null);
+  const [imgUploading, setImgUploading] = useState(false);
+  const quickImageInputRef = useRef(null);
+
+  const openQuickImagePicker = (productId) => {
+    setImgUploadTargetId(productId);
+    quickImageInputRef.current.click();
+  };
+
+  const handleQuickImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !imgUploadTargetId) return;
+    setImgUploading(true);
+    try {
+      const path = `${Date.now()}_${file.name}`;
+      const { error: uploadError } = await supabase.storage.from('product-images').upload(path, file);
+      if (uploadError) throw uploadError;
+      const url = supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
+      await supabase.from('products').update({ image: url }).eq('id', imgUploadTargetId);
+    } catch (err) {
+      alert("حدث خطأ أثناء رفع الصورة!");
+    }
+    setImgUploading(false);
+    setImgUploadTargetId(null);
+    e.target.value = null;
+  };
+
+  const startQuickPriceEdit = (p) => {
+    setQuickPriceId(p.id);
+    setQuickPriceValue(p.price);
+  };
+
+  const saveQuickPrice = async (id) => {
+    const newPrice = Number(quickPriceValue);
+    if (!isNaN(newPrice) && newPrice >= 0) {
+      await supabase.from('products').update({ price: newPrice }).eq('id', id);
+    }
+    setQuickPriceId(null);
+  };
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -169,16 +206,16 @@ const Inventory = ({ products, categories }) => {
   return (
     <div className="n-card n-fade-in" style={{ height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', padding: '25px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '10px' }}>
-        <h1 className="section-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}><Icons.Receipt size={22} /> المنيو والمخزون</h1>
+        <h1 className="section-title" style={{ margin: 0 }}>المنيو والمخزون 🧾</h1>
         {lowStockCount > 0 && (
-          <span className="tag" style={{ background: 'var(--danger-tint)', color: 'var(--danger)' }}><Icons.AlertTriangle /> {lowStockCount} صنف على وشك النفاد</span>
+          <span className="tag" style={{ background: 'var(--danger-tint)', color: 'var(--danger)' }}>⚠️ {lowStockCount} صنف على وشك النفاد</span>
         )}
       </div>
 
       <div style={{ display: 'flex', gap: '15px', marginBottom: '18px', flexWrap: 'wrap' }}>
-        <input placeholder="ابحث عن منتج..." className="n-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ flex: 1, margin: 0, minWidth: '200px' }} />
+        <input placeholder="🔍 ابحث عن منتج..." className="n-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ flex: 1, margin: 0, minWidth: '200px' }} />
         <select className="n-select" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} style={{ width: '200px', margin: 0 }}>
-          <option value="الكل">جميع الأقسام</option>
+          <option value="الكل">جميع الأقسام 📂</option>
           {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
         </select>
       </div>
@@ -186,18 +223,18 @@ const Inventory = ({ products, categories }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <div style={{ display: 'flex', gap: '10px' }}>
           {selectedIds.length > 0 ? (
-            <button className="n-btn" style={{ background: 'var(--danger)', color: 'white', padding: '11px 20px' }} onClick={deleteSelected}><Icons.Trash /> حذف ({selectedIds.length})</button>
+            <button className="n-btn" style={{ background: 'var(--danger)', color: 'white', padding: '11px 20px' }} onClick={deleteSelected}>🗑️ حذف ({selectedIds.length})</button>
           ) : (
             <>
-              <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={openAddModal}><Icons.Plus /> إضافة منتج</button>
-              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={() => fileInputRef.current.click()}><Icons.Upload /> رفع إكسيل</button>
-              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={downloadTemplate}><Icons.Receipt size={16} /> قالب</button>
+              <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={openAddModal}>+ إضافة منتج</button>
+              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={() => fileInputRef.current.click()}>📥 رفع إكسيل</button>
+              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={downloadTemplate}>📄 قالب</button>
             </>
           )}
         </div>
       </div>
 
-      {isLoading && <div style={{ color: 'var(--teal)', fontWeight: 'bold', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}><Icons.Clock size={14} /> جاري التحميل...</div>}
+      {isLoading && <div style={{ color: 'var(--teal)', fontWeight: 'bold', marginBottom: '10px' }}>جاري التحميل... ⏳</div>}
 
       <div style={{ flex: 1, overflowY: 'auto', border: '1px solid var(--line)', borderRadius: 'var(--r-lg)' }}>
         <table>
@@ -212,7 +249,7 @@ const Inventory = ({ products, categories }) => {
               <th>السعر</th>
               <th>المخزون</th>
               <th style={{ textAlign: 'center' }}>التوفر</th>
-              <th style={{ textAlign: 'center' }}>الظهور</th>
+              <th style={{ textAlign: 'center' }}>الظهور 👁️</th>
               <th style={{ textAlign: 'center' }}>تعديل</th>
             </tr>
           </thead>
@@ -226,15 +263,39 @@ const Inventory = ({ products, categories }) => {
                     <input type="checkbox" checked={selectedIds.includes(p.id)} readOnly style={{ pointerEvents: 'none' }} />
                   </td>
                   <td>
-                    {p.image ? <img src={p.image} alt={p.name} style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover' }} /> : <span style={{ color: 'var(--ink-faint)' }}><Icons.Image size={20} /></span>}
+                    <div
+                      onClick={() => openQuickImagePicker(p.id)}
+                      title="دوس لتغيير الصورة"
+                      style={{ width: '40px', height: '40px', borderRadius: '8px', cursor: 'pointer', position: 'relative', overflow: 'hidden', background: 'var(--paper)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      {imgUploading && imgUploadTargetId === p.id ? (
+                        <div className="n-skeleton" style={{ width: '100%', height: '100%', borderRadius: 0 }} />
+                      ) : p.image ? (
+                        <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : '🖼️'}
+                    </div>
                   </td>
-                  <td><b>{p.name}</b> {p.isCombo && <span className="tag" style={{ background: 'var(--berry-tint)', color: 'var(--berry-deep)', marginRight: '6px' }}><Icons.Gift size={12} /> عرض</span>}</td>
+                  <td><b>{p.name}</b> {p.isCombo && <span className="tag" style={{ background: 'var(--berry-tint)', color: 'var(--berry-deep)', marginRight: '6px' }}>🎁 عرض</span>}</td>
                   <td><span className={`tag ${TAG_CLASS[temp]}`}>{p.category}</span></td>
-                  <td><span className="stub" style={{ fontSize: '13px', color: 'var(--teal-deep)' }}>{p.price} ر.س</span></td>
+                  <td>
+                    {quickPriceId === p.id ? (
+                      <input
+                        type="number" autoFocus className="n-input" style={{ margin: 0, padding: '6px 10px', width: '90px', fontSize: '13px' }}
+                        value={quickPriceValue}
+                        onChange={e => setQuickPriceValue(e.target.value)}
+                        onBlur={() => saveQuickPrice(p.id)}
+                        onKeyDown={e => { if (e.key === 'Enter') saveQuickPrice(p.id); if (e.key === 'Escape') setQuickPriceId(null); }}
+                      />
+                    ) : (
+                      <span className="stub n-press" style={{ fontSize: '13px', color: 'var(--teal-deep)', cursor: 'pointer' }} title="دوس لتعديل السعر" onClick={() => startQuickPriceEdit(p)}>
+                        {p.price} ر.س ✏️
+                      </span>
+                    )}
+                  </td>
                   <td>
                     {p.trackStock ? (
-                      <span style={{ fontWeight: '800', color: isLow ? 'var(--danger)' : 'var(--ink)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                        {p.stock} {isLow && <Icons.AlertTriangle size={13} />}
+                      <span style={{ fontWeight: '800', fontFamily: 'var(--font-mono)', color: isLow ? 'var(--danger)' : 'var(--ink)' }}>
+                        {p.stock} {isLow && '⚠️'}
                       </span>
                     ) : <span style={{ color: 'var(--ink-faint)', fontSize: '12px' }}>غير متتبَّع</span>}
                   </td>
@@ -251,11 +312,11 @@ const Inventory = ({ products, categories }) => {
                       onClick={async () => await supabase.from('products').update({ is_visible: p.isVisible === false ? true : false }).eq('id', p.id)}
                       className="tag" style={{ border: 'none', cursor: 'pointer', background: p.isVisible === false ? 'var(--danger-tint)' : 'var(--success-tint)', color: p.isVisible === false ? 'var(--danger)' : 'var(--success)' }}
                     >
-                      {p.isVisible === false ? <><Icons.EyeOff size={13} /> مخفي</> : <><Icons.Eye size={13} /> ظاهر</>}
+                      {p.isVisible === false ? "🙈 مخفي" : "👁️ ظاهر"}
                     </button>
                   </td>
                   <td style={{ textAlign: 'center' }}>
-                    <button className="n-btn n-btn-ghost" style={{ padding: '6px' }} onClick={() => openEditModal(p)}><Icons.Edit size={16} /></button>
+                    <button className="n-btn n-btn-ghost" style={{ padding: '6px' }} onClick={() => openEditModal(p)}>✏️</button>
                   </td>
                 </tr>
               );
@@ -265,11 +326,12 @@ const Inventory = ({ products, categories }) => {
       </div>
 
       <input type="file" accept=".xlsx, .xls, .csv" ref={fileInputRef} onChange={handleFileUpload} style={{ display: 'none' }} />
+      <input type="file" accept="image/*" ref={quickImageInputRef} onChange={handleQuickImageChange} style={{ display: 'none' }} />
 
       {showModal && (
         <div className="sheet-overlay" style={{ alignItems: 'center' }} onClick={() => setShowModal(false)}>
           <div className="n-card n-fade-in" onClick={e => e.stopPropagation()} style={{ maxWidth: '560px', width: '100%', margin: '20px', padding: '30px', maxHeight: '90vh', overflowY: 'auto' }}>
-            <h2 style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>{editMode ? <><Icons.Edit size={18} /> تعديل بيانات المنتج</> : <><Icons.Plus size={18} /> إضافة منتج جديد</>}</h2>
+            <h2 style={{ marginBottom: '20px' }}>{editMode ? "تعديل بيانات المنتج ✏️" : "إضافة منتج جديد ➕"}</h2>
 
             <form onSubmit={handleSave}>
               <div style={{ background: 'var(--paper)', padding: '16px', borderRadius: 'var(--r-lg)', border: '1px dashed var(--line)', marginBottom: '16px' }}>
@@ -322,7 +384,7 @@ const Inventory = ({ products, categories }) => {
               <div className="n-card" style={{ padding: '14px 16px', marginBottom: '15px', boxShadow: 'none', background: 'var(--paper)' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '800', fontSize: '13.5px', color: 'var(--ink)', cursor: 'pointer', marginBottom: form.isCombo ? '14px' : 0 }}>
                   <input type="checkbox" checked={form.isCombo} onChange={e => setForm({ ...form, isCombo: e.target.checked })} />
-                  <Icons.Gift size={15} /> ده كومبو / عرض (مكوّن من أكتر من صنف)
+                  🎁 ده كومبو / عرض (مكوّن من أكتر من صنف)
                 </label>
                 {form.isCombo && (
                   <div>
@@ -330,10 +392,10 @@ const Inventory = ({ products, categories }) => {
                       <div key={idx} style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                         <input className="n-input" style={{ margin: 0, flex: 2 }} placeholder="اسم الصنف (مثال: قهوة تركي)" value={item.name} onChange={e => updateComboItem(idx, 'name', e.target.value)} />
                         <input className="n-input" type="number" min="1" style={{ margin: 0, width: '70px' }} value={item.qty} onChange={e => updateComboItem(idx, 'qty', Number(e.target.value))} />
-                        <button type="button" className="n-btn n-btn-danger" style={{ padding: '0 14px' }} onClick={() => removeComboItem(idx)}><Icons.Close size={14} /></button>
+                        <button type="button" className="n-btn n-btn-danger" style={{ padding: '0 14px' }} onClick={() => removeComboItem(idx)}>✕</button>
                       </div>
                     ))}
-                    <button type="button" className="n-btn n-btn-outline" style={{ padding: '8px 16px', fontSize: '13px' }} onClick={addComboItem}><Icons.Plus size={14} /> إضافة صنف للعرض</button>
+                    <button type="button" className="n-btn n-btn-outline" style={{ padding: '8px 16px', fontSize: '13px' }} onClick={addComboItem}>+ إضافة صنف للعرض</button>
                   </div>
                 )}
               </div>
