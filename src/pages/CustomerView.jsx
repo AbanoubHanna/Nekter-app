@@ -280,7 +280,7 @@ const CustomerView = () => {
                         <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                       </div>
                       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
+                        <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</h3>
                         {p.comboItems?.length > 0 && (
                           <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5' }}>
                             {p.comboItems.map(i => `${i.qty}x ${i.name}`).join(' + ')}
@@ -330,7 +330,7 @@ const CustomerView = () => {
                             <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                           </div>
                           <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
+                            <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</h3>
                             <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5', flex: 1 }}>{p.description}</p>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
                               <span className="stub" style={{ color: style.deep, fontSize: '15px' }}>{p.price} ر.س</span>
@@ -357,7 +357,7 @@ const CustomerView = () => {
                           <img src={groupImage ? optimizedImageUrl(groupImage, 400) : '/logo.png'} className="product-img" alt={baseName} loading="lazy" />
                         </div>
                         <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-                          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{baseName}</h3>
+                          <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{baseName}</h3>
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             {item.variants.map(v => (
                               <button
