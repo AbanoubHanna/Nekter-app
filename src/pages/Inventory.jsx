@@ -24,6 +24,9 @@ const Inventory = ({ products, categories }) => {
 
   const [quickPriceId, setQuickPriceId] = useState(null);
   const [quickPriceValue, setQuickPriceValue] = useState("");
+  const [bulkPriceMode, setBulkPriceMode] = useState(false);
+  const [bulkPriceValues, setBulkPriceValues] = useState({});
+  const [bulkSaving, setBulkSaving] = useState(false);
   const [imgUploadTargetId, setImgUploadTargetId] = useState(null);
   const [imgUploading, setImgUploading] = useState(false);
   const quickImageInputRef = useRef(null);
@@ -88,6 +91,33 @@ const Inventory = ({ products, categories }) => {
       setSelectedIds([]);
       setIsLoading(false);
     }
+  };
+
+  const startBulkPriceEdit = () => {
+    const initial = {};
+    products.filter(p => selectedIds.includes(p.id)).forEach(p => { initial[p.id] = p.price; });
+    setBulkPriceValues(initial);
+    setBulkPriceMode(true);
+  };
+
+  const cancelBulkPriceEdit = () => {
+    setBulkPriceMode(false);
+    setBulkPriceValues({});
+  };
+
+  const saveBulkPriceEdit = async () => {
+    setBulkSaving(true);
+    const updates = Object.entries(bulkPriceValues);
+    for (const [id, value] of updates) {
+      const newPrice = Number(value);
+      if (!isNaN(newPrice) && newPrice >= 0) {
+        await supabase.from('products').update({ price: newPrice }).eq('id', id);
+      }
+    }
+    setBulkSaving(false);
+    setBulkPriceMode(false);
+    setBulkPriceValues({});
+    setSelectedIds([]);
   };
 
   const handleSave = async (e) => {
@@ -222,8 +252,18 @@ const Inventory = ({ products, categories }) => {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
         <div style={{ display: 'flex', gap: '10px' }}>
-          {selectedIds.length > 0 ? (
-            <button className="n-btn" style={{ background: 'var(--danger)', color: 'white', padding: '11px 20px' }} onClick={deleteSelected}>🗑️ حذف ({selectedIds.length})</button>
+          {bulkPriceMode ? (
+            <>
+              <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} disabled={bulkSaving} onClick={saveBulkPriceEdit}>
+                {bulkSaving ? "جاري الحفظ..." : "💾 حفظ الأسعار"}
+              </button>
+              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={cancelBulkPriceEdit}>إلغاء</button>
+            </>
+          ) : selectedIds.length > 0 ? (
+            <>
+              <button className="n-btn" style={{ background: 'var(--teal)', color: 'white', padding: '11px 20px' }} onClick={startBulkPriceEdit}>✏️ تعديل السعر ({selectedIds.length})</button>
+              <button className="n-btn" style={{ background: 'var(--danger)', color: 'white', padding: '11px 20px' }} onClick={deleteSelected}>🗑️ حذف ({selectedIds.length})</button>
+            </>
           ) : (
             <>
               <button className="n-btn n-btn-primary" style={{ padding: '11px 20px' }} onClick={openAddModal}>+ إضافة منتج</button>
@@ -266,19 +306,36 @@ const Inventory = ({ products, categories }) => {
                     <div
                       onClick={() => openQuickImagePicker(p.id)}
                       title="دوس لتغيير الصورة"
-                      style={{ width: '40px', height: '40px', borderRadius: '8px', cursor: 'pointer', position: 'relative', overflow: 'hidden', background: 'var(--paper)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      style={{ width: '68px', height: '68px', borderRadius: '10px', cursor: 'pointer', position: 'relative', overflow: 'hidden', background: 'var(--paper)', border: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
                       {imgUploading && imgUploadTargetId === p.id ? (
                         <div className="n-skeleton" style={{ width: '100%', height: '100%', borderRadius: 0 }} />
                       ) : p.image ? (
                         <img src={p.image} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      ) : '🖼️'}
+                      ) : <span style={{ fontSize: '26px' }}>🖼️</span>}
+
+                      <div style={{
+                        position: 'absolute', bottom: '3px', left: '3px', width: '24px', height: '24px', borderRadius: '50%',
+                        background: 'var(--ink)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.35)', border: '2px solid var(--paper-raised)'
+                      }}>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                          <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                      </div>
                     </div>
                   </td>
                   <td><b>{p.name}</b> {p.isCombo && <span className="tag" style={{ background: 'var(--berry-tint)', color: 'var(--berry-deep)', marginRight: '6px' }}>🎁 عرض</span>}</td>
                   <td><span className={`tag ${TAG_CLASS[temp]}`}>{p.category}</span></td>
                   <td>
-                    {quickPriceId === p.id ? (
+                    {bulkPriceMode && selectedIds.includes(p.id) ? (
+                      <input
+                        type="number" className="n-input" style={{ margin: 0, padding: '6px 10px', width: '90px', fontSize: '13px', borderColor: 'var(--teal)' }}
+                        value={bulkPriceValues[p.id] ?? p.price}
+                        onChange={e => setBulkPriceValues(prev => ({ ...prev, [p.id]: e.target.value }))}
+                      />
+                    ) : quickPriceId === p.id ? (
                       <input
                         type="number" autoFocus className="n-input" style={{ margin: 0, padding: '6px 10px', width: '90px', fontSize: '13px' }}
                         value={quickPriceValue}
