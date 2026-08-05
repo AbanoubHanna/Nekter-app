@@ -12,7 +12,7 @@ const Inventory = ({ products, categories }) => {
   const [editMode, setEditMode] = useState(false);
   const [currentId, setCurrentId] = useState(null);
 
-  const [form, setForm] = useState({ name: "", price: "", category: "", description: "", image: "", status: "متوفر", stock: "", trackStock: false, isCombo: false, comboItems: [] });
+  const [form, setForm] = useState({ name: "", price: "", category: "", description: "", image: "", status: "متوفر", stock: "", trackStock: false, isCombo: false, comboItems: [], variantGroup: "", variantLabel: "" });
   const [imageUpload, setImageUpload] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +26,27 @@ const Inventory = ({ products, categories }) => {
   const [quickPriceValue, setQuickPriceValue] = useState("");
   const [bulkPriceMode, setBulkPriceMode] = useState(false);
   const [bulkPriceValues, setBulkPriceValues] = useState({});
+  const [bulkAdjustType, setBulkAdjustType] = useState("percent"); // percent | fixed
+  const [bulkAdjustDirection, setBulkAdjustDirection] = useState("increase"); // increase | decrease
+  const [bulkAdjustAmount, setBulkAdjustAmount] = useState("");
+
+  const roundPrice = (n) => Math.round(n * 4) / 4; // نقرب لأقرب ربع جنيه بدل كسور غريبة
+
+  const applyBulkAdjustment = () => {
+    const amount = Number(bulkAdjustAmount);
+    if (!amount || amount <= 0) return;
+    const sign = bulkAdjustDirection === "increase" ? 1 : -1;
+    setBulkPriceValues(prev => {
+      const next = { ...prev };
+      products.filter(p => selectedIds.includes(p.id)).forEach(p => {
+        const base = Number(prev[p.id] ?? p.price);
+        const delta = bulkAdjustType === "percent" ? base * (amount / 100) : amount;
+        const newPrice = Math.max(0, roundPrice(base + sign * delta));
+        next[p.id] = newPrice;
+      });
+      return next;
+    });
+  };
   const [bulkSaving, setBulkSaving] = useState(false);
   const [showMoveCategory, setShowMoveCategory] = useState(false);
   const [moveTargetCategory, setMoveTargetCategory] = useState("");
@@ -110,12 +131,14 @@ const Inventory = ({ products, categories }) => {
     const initial = {};
     products.filter(p => selectedIds.includes(p.id)).forEach(p => { initial[p.id] = p.price; });
     setBulkPriceValues(initial);
+    setBulkAdjustAmount("");
     setBulkPriceMode(true);
   };
 
   const cancelBulkPriceEdit = () => {
     setBulkPriceMode(false);
     setBulkPriceValues({});
+    setBulkAdjustAmount("");
   };
 
   const saveBulkPriceEdit = async () => {
@@ -157,6 +180,8 @@ const Inventory = ({ products, categories }) => {
         stock: form.trackStock ? Number(form.stock || 0) : null,
         isCombo: !!form.isCombo,
         comboItems: form.isCombo ? form.comboItems.filter(i => i.name) : [],
+        variantGroup: form.variantGroup || null,
+        variantLabel: form.variantLabel || null,
       };
 
       if (editMode) {
@@ -223,7 +248,7 @@ const Inventory = ({ products, categories }) => {
   };
 
   const openAddModal = () => {
-    setForm({ name: "", price: "", category: "", description: "", image: "", status: "متوفر", stock: "", trackStock: false, isCombo: false, comboItems: [] });
+    setForm({ name: "", price: "", category: "", description: "", image: "", status: "متوفر", stock: "", trackStock: false, isCombo: false, comboItems: [], variantGroup: "", variantLabel: "" });
     setImageUpload(null);
     setEditMode(false);
     setShowModal(true);
@@ -231,7 +256,7 @@ const Inventory = ({ products, categories }) => {
 
   const openEditModal = (p) => {
     setCurrentId(p.id);
-    setForm({ name: p.name, price: p.price, category: p.category, description: p.description || "", image: p.image || "", status: p.status || "متوفر", stock: p.stock ?? "", trackStock: !!p.trackStock, isCombo: !!p.isCombo, comboItems: p.comboItems && p.comboItems.length ? p.comboItems : [] });
+    setForm({ name: p.name, price: p.price, category: p.category, description: p.description || "", image: p.image || "", status: p.status || "متوفر", stock: p.stock ?? "", trackStock: !!p.trackStock, isCombo: !!p.isCombo, comboItems: p.comboItems && p.comboItems.length ? p.comboItems : [], variantGroup: p.variantGroup || "", variantLabel: p.variantLabel || "" });
     setImageUpload(null);
     setEditMode(true);
     setShowModal(true);
@@ -263,7 +288,7 @@ const Inventory = ({ products, categories }) => {
         </select>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ display: 'flex', gap: '10px' }}>
           {bulkPriceMode ? (
             <>
@@ -286,6 +311,25 @@ const Inventory = ({ products, categories }) => {
             </>
           )}
         </div>
+
+        {bulkPriceMode && (
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', background: 'var(--teal-tint)', padding: '8px 12px', borderRadius: 'var(--r-md)', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '12.5px', fontWeight: '800', color: 'var(--teal-deep)' }}>تعديل جماعي:</span>
+            <select className="n-select" style={{ margin: 0, width: 'auto', padding: '8px 10px', fontSize: '12.5px' }} value={bulkAdjustDirection} onChange={e => setBulkAdjustDirection(e.target.value)}>
+              <option value="increase">زيادة</option>
+              <option value="decrease">نقصان</option>
+            </select>
+            <input
+              type="number" className="n-input" placeholder="القيمة" style={{ margin: 0, width: '90px', padding: '8px 10px', fontSize: '12.5px' }}
+              value={bulkAdjustAmount} onChange={e => setBulkAdjustAmount(e.target.value)}
+            />
+            <select className="n-select" style={{ margin: 0, width: 'auto', padding: '8px 10px', fontSize: '12.5px' }} value={bulkAdjustType} onChange={e => setBulkAdjustType(e.target.value)}>
+              <option value="percent">%</option>
+              <option value="fixed">ر.س ثابتة</option>
+            </select>
+            <button className="n-btn n-btn-dark" style={{ padding: '8px 16px', fontSize: '12.5px' }} onClick={applyBulkAdjustment}>تطبيق على الكل</button>
+          </div>
+        )}
       </div>
 
       {isLoading && <div style={{ color: 'var(--teal)', fontWeight: 'bold', marginBottom: '10px' }}>جاري التحميل... ⏳</div>}
@@ -488,6 +532,15 @@ const Inventory = ({ products, categories }) => {
                     <button type="button" className="n-btn n-btn-outline" style={{ padding: '8px 16px', fontSize: '13px' }} onClick={addComboItem}>+ إضافة صنف للعرض</button>
                   </div>
                 )}
+              </div>
+
+              <div className="n-card" style={{ padding: '14px 16px', marginBottom: '15px', boxShadow: 'none', background: 'var(--paper)' }}>
+                <label className="n-label" style={{ marginBottom: '10px' }}>🥤 ربط بأحجام تانية (اختياري)</label>
+                <p style={{ fontSize: '11.5px', color: 'var(--ink-faint)', margin: '0 0 10px' }}>لو المنتج ده حجم من أحجام صنف تاني، اكتب نفس "اسم المجموعة" في كل الأحجام عشان تظهر في كارت واحد للعميل مع اختيار الحجم.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '10px' }}>
+                  <input className="n-input" style={{ margin: 0 }} placeholder="اسم المجموعة (مثال: آيس كريم مانجو)" value={form.variantGroup} onChange={e => setForm({ ...form, variantGroup: e.target.value })} />
+                  <input className="n-input" style={{ margin: 0 }} placeholder="اسم الحجم (صغير/وسط/كبير)" value={form.variantLabel} onChange={e => setForm({ ...form, variantLabel: e.target.value })} />
+                </div>
               </div>
 
               <label className="n-label">الوصف التسويقي</label>
