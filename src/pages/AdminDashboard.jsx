@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense, lazy } from "react";
 import { supabase, mapOrderedRow } from "../supabase";
 import { Icons } from "../components/Icons";
 
 // استدعاء المكونات
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import Reports from "./Reports";
 import LiveOrders from "./LiveOrders";
-import Inventory from "./Inventory";
 import CategoriesManager from "./CategoriesManager";
-import Invoices from "./Invoices";
 import Customers from "./Customers";
 import Users from "./Users";
 import AdminLogin from "./AdminLogin";
@@ -18,6 +15,17 @@ import AdminRoles from "./AdminRoles";
 import AuditLog from "./AuditLog";
 import Rewards from "./Rewards";
 import "../styles/theme.css";
+
+// أتقل التبويبات (recharts / xlsx) بتتحمّل بس وقت فتحها فعليًا
+const Reports = lazy(() => import("./Reports"));
+const Inventory = lazy(() => import("./Inventory"));
+const Invoices = lazy(() => import("./Invoices"));
+
+const TabFallback = () => (
+  <div style={{ padding: '60px 0', textAlign: 'center', color: 'var(--ink-faint)', fontWeight: 700 }}>
+    جاري التحميل...
+  </div>
+);
 
 const GlobalStyle = () => (
 
@@ -218,11 +226,13 @@ const AdminDashboard = () => {
               <span className="n-btn n-btn-outline" style={{ padding: '6px 14px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>اعرض المخزون <Icons.ArrowRight size={14} /></span>
             </div>
           )}
-          {activeTab === 'reports' && <Reports orders={orders} products={products} />}
+          <Suspense fallback={<TabFallback />}>
+            {activeTab === 'reports' && <Reports orders={orders} products={products} />}
+            {activeTab === 'inventory' && <Inventory products={products} categories={categories} />}
+            {activeTab === 'invoices' && <Invoices orders={orders} />}
+          </Suspense>
           {activeTab === 'live_orders' && <LiveOrders orders={orders} />}
-          {activeTab === 'inventory' && <Inventory products={products} categories={categories} />}
           {activeTab === 'categories' && <CategoriesManager categories={categories} products={products} />}
-          {activeTab === 'invoices' && <Invoices orders={orders} />}
           {activeTab === 'customers' && <Customers orders={orders} />}
           {activeTab === 'rewards' && <Rewards rewards={rewards} />}
           {activeTab === 'users' && adminRole && <Users users={users} onChange={fetchUsers} adminRole={adminRole} />}

@@ -36,6 +36,13 @@
   --info: #3B82F6;
   --info-tint: #EFF6FF;
 
+  /* --- reports: qualitative chart palette (category pie slices etc.) --- */
+  --chart-1: #1F9E92;
+  --chart-2: #C97D2E;
+  --chart-3: #B6467A;
+  --chart-4: #16213A;
+  --chart-5: #3B7DD6;
+
   /* --- shape & depth --- */
   --r-sm: 10px;
   --r-md: 16px;

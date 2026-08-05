@@ -10,7 +10,7 @@ const RANGE_OPTIONS = [
   { id: "all", label: "كل الفترات" },
 ];
 
-const getOrderDate = (o) => o.createdAt?.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+const getOrderDate = (o) => new Date(o.createdAt);
 
 const Reports = ({ orders, products }) => {
   const [range, setRange] = useState("week");
@@ -54,7 +54,7 @@ const Reports = ({ orders, products }) => {
     return acc;
   }, {});
   const pieData = Object.keys(categorySales).map(key => ({ name: key, value: categorySales[key] }));
-  const COLORS = ['#1F9E92', '#C97D2E', '#B6467A', '#16213A', '#3B7DD6'];
+  const COLORS = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)', 'var(--chart-4)', 'var(--chart-5)'];
 
   // top / worst selling products by quantity
   const productStats = filteredOrders.flatMap(o => o.items || []).reduce((acc, item) => {

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import AnimatedNumber from "../components/AnimatedNumber";
 import { Icons } from "../components/Icons";
 
-const getOrderDate = (o) => o.createdAt?.toDate ? o.createdAt.toDate() : new Date(o.createdAt);
+const getOrderDate = (o) => new Date(o.createdAt);
 
 const Customers = ({ orders }) => {
   const [selectedCustomer, setSelectedCustomer] = useState(null);
