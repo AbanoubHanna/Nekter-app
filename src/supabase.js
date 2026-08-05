@@ -5,6 +5,17 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Uploaded product photos come straight off phones (multi-MB PNGs) and get
+// served at ~150px on the menu. Route them through Supabase's on-the-fly
+// image transform so the browser downloads a resized webp instead of the
+// original file — same source image, no re-upload needed.
+export function optimizedImageUrl(url, width = 400) {
+  if (!url || !url.includes('/storage/v1/object/public/')) return url;
+  const transformed = url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
+  const separator = transformed.includes('?') ? '&' : '?';
+  return `${transformed}${separator}width=${width}&quality=75&format=webp`;
+}
+
 // ---- row <-> app-object mapping helpers -------------------------------
 // DB columns are snake_case; the app (and every component already built)
 // expects the same camelCase shape Firestore used to hand back, plus the

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { supabase, mapOrderedRow, toSnakeRow } from "../supabase";
+import { supabase, mapOrderedRow, toSnakeRow, optimizedImageUrl } from "../supabase";
 import { useLocation } from "react-router-dom";
 import ConfettiBurst from "../components/ConfettiBurst";
 import "../styles/theme.css";
@@ -59,11 +59,12 @@ const GlobalStyle = () => (
     .cat-chip { flex-shrink: 0; padding: 10px 20px; border-radius: var(--r-full); font-weight: 800; font-size: 14px; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper-raised); color: var(--ink-soft); transition: 0.2s; }
     .cat-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
     .section-head { padding: 4px 20px; display: flex; justify-content: space-between; align-items: baseline; margin: 22px 0 12px; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 0 20px; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 0 20px; }
     .product-card { background: var(--paper-raised); border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: 0.2s; }
     .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .product-img-wrap { position: relative; height: 140px; background: var(--paper); }
-    .product-img { width: 100%; height: 100%; object-fit: cover; }
+    .product-img-wrap { position: relative; aspect-ratio: 1 / 1; background: var(--paper); }
+    .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; } }
     .qty-pill { display: flex; align-items: center; background: var(--paper); border-radius: var(--r-full); border: 1.5px solid var(--line); }
     .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--paper-raised); height: 78px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -8px 24px rgba(22,33,58,0.06); z-index: 1000; border-top: 1px solid var(--line); }
@@ -276,7 +277,7 @@ const CustomerView = () => {
                     <div key={p.id} className="product-card combo-card n-rise n-hover-lift" style={{ '--d': `${idx * 50}ms`, minWidth: '260px', maxWidth: '260px', flexShrink: 0, position: 'relative' }}>
                       <span className="combo-ribbon">عرض خاص</span>
                       <div className="product-img-wrap">
-                        <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
+                        <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                       </div>
                       <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
                         <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
@@ -326,7 +327,7 @@ const CustomerView = () => {
                       return (
                         <div key={item.key} className="product-card n-rise n-hover-lift" style={{ '--d': `${catIdx * 70 + pIdx * 40}ms` }}>
                           <div className="product-img-wrap">
-                            <img src={p.image || '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
+                            <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                           </div>
                           <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
                             <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{p.name}</h3>
@@ -349,10 +350,11 @@ const CustomerView = () => {
                     const active = item.variants.find(v => v.id === activeId) || item.variants[0];
                     const qty = cart.find(x => x.id === active.id)?.qty || 0;
                     const baseName = active.name.replace(/\s*[\(-]\s*(صغير|وسط|كبير|عائلي|S|M|L|XL)\s*\)?\s*$/i, '').trim();
+                    const groupImage = item.variants.find(v => v.image)?.image;
                     return (
                       <div key={item.key} className="product-card n-rise n-hover-lift" style={{ '--d': `${catIdx * 70 + pIdx * 40}ms` }}>
                         <div className="product-img-wrap">
-                          <img src={item.variants.find(v => v.image)?.image || '/logo.png'} className="product-img" alt={baseName} loading="lazy" />
+                          <img src={groupImage ? optimizedImageUrl(groupImage, 400) : '/logo.png'} className="product-img" alt={baseName} loading="lazy" />
                         </div>
                         <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
                           <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)' }}>{baseName}</h3>
