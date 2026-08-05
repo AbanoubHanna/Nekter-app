@@ -27,6 +27,19 @@ const Inventory = ({ products, categories }) => {
   const [bulkPriceMode, setBulkPriceMode] = useState(false);
   const [bulkPriceValues, setBulkPriceValues] = useState({});
   const [bulkSaving, setBulkSaving] = useState(false);
+  const [showMoveCategory, setShowMoveCategory] = useState(false);
+  const [moveTargetCategory, setMoveTargetCategory] = useState("");
+  const [moveSaving, setMoveSaving] = useState(false);
+
+  const applyMoveCategory = async () => {
+    if (!moveTargetCategory) return;
+    setMoveSaving(true);
+    await supabase.from('products').update({ category: moveTargetCategory }).in('id', selectedIds);
+    setMoveSaving(false);
+    setShowMoveCategory(false);
+    setMoveTargetCategory("");
+    setSelectedIds([]);
+  };
   const [imgUploadTargetId, setImgUploadTargetId] = useState(null);
   const [imgUploading, setImgUploading] = useState(false);
   const quickImageInputRef = useRef(null);
@@ -262,6 +275,7 @@ const Inventory = ({ products, categories }) => {
           ) : selectedIds.length > 0 ? (
             <>
               <button className="n-btn" style={{ background: 'var(--teal)', color: 'white', padding: '11px 20px' }} onClick={startBulkPriceEdit}>✏️ تعديل السعر ({selectedIds.length})</button>
+              <button className="n-btn n-btn-outline" style={{ padding: '11px 20px' }} onClick={() => setShowMoveCategory(true)}>📂 نقل لقسم ({selectedIds.length})</button>
               <button className="n-btn" style={{ background: 'var(--danger)', color: 'white', padding: '11px 20px' }} onClick={deleteSelected}>🗑️ حذف ({selectedIds.length})</button>
             </>
           ) : (
@@ -384,6 +398,25 @@ const Inventory = ({ products, categories }) => {
 
       <input type="file" accept=".xlsx, .xls, .csv" ref={fileInputRef} onChange={handleFileUpload} style={{ display: 'none' }} />
       <input type="file" accept="image/*" ref={quickImageInputRef} onChange={handleQuickImageChange} style={{ display: 'none' }} />
+
+      {showMoveCategory && (
+        <div className="sheet-overlay" style={{ alignItems: 'center' }} onClick={() => setShowMoveCategory(false)}>
+          <div className="n-card n-fade-in" onClick={e => e.stopPropagation()} style={{ maxWidth: '380px', width: '100%', margin: '20px', padding: '28px' }}>
+            <h2 style={{ marginTop: 0 }}>📂 نقل {selectedIds.length} صنف لقسم تاني</h2>
+            <label className="n-label">اختر القسم الجديد</label>
+            <select className="n-select" style={{ marginBottom: '20px' }} value={moveTargetCategory} onChange={e => setMoveTargetCategory(e.target.value)}>
+              <option value="" disabled>-- اختر قسم --</option>
+              {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+            </select>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button className="n-btn n-btn-primary" style={{ flex: 1, padding: '13px' }} disabled={!moveTargetCategory || moveSaving} onClick={applyMoveCategory}>
+                {moveSaving ? "جاري النقل..." : "نقل الآن"}
+              </button>
+              <button className="n-btn n-btn-outline" style={{ flex: 1, padding: '13px' }} onClick={() => setShowMoveCategory(false)}>إلغاء</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="sheet-overlay" style={{ alignItems: 'center' }} onClick={() => setShowModal(false)}>
