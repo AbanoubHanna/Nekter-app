@@ -204,7 +204,7 @@ const CashierView = () => {
         <div style={{ background: 'var(--paper)', padding: '15px', borderRadius: 'var(--r-md)', flex: 1, border: '1px solid var(--line)' }}>
           {order.items?.map((item, i) => (
             <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '15px', fontWeight: '800', color: 'var(--ink-soft)' }}>
-              <span>{item.qty}x {item.name}</span>
+              <span style={{ unicodeBidi: 'plaintext' }}>{item.qty}x {item.name}</span>
             </div>
           ))}
           {order.notes && (

@@ -290,7 +290,7 @@ const CustomerView = () => {
                           <span className="stub" style={{ color: 'var(--berry-deep)', fontSize: '15px' }}>{p.price} ر.س</span>
                           <div className="qty-pill">
                             <button className="qty-btn n-press" style={{ background: 'var(--berry)' }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                            <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
+                            <span style={{ width: '26px', textAlign: 'center', fontWeight: '900' }}>{qty}</span>
                             <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
                           </div>
                         </div>
@@ -336,7 +336,7 @@ const CustomerView = () => {
                               <span className="stub" style={{ color: style.deep, fontSize: '15px' }}>{p.price} ر.س</span>
                               <div className="qty-pill">
                                 <button className="qty-btn n-press" style={{ background: style.accent }} onClick={() => handleAddToCart(p)}><Icons.Plus /></button>
-                                <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
+                                <span style={{ width: '26px', textAlign: 'center', fontWeight: '900' }}>{qty}</span>
                                 <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(p)}><Icons.Minus /></button>
                               </div>
                             </div>
@@ -379,7 +379,7 @@ const CustomerView = () => {
                             <span className="stub" style={{ color: style.deep, fontSize: '15px' }}>{active.price} ر.س</span>
                             <div className="qty-pill">
                               <button className="qty-btn n-press" style={{ background: style.accent }} onClick={() => handleAddToCart(active)}><Icons.Plus /></button>
-                              <span style={{ width: '26px', textAlign: 'center', fontWeight: '900', fontFamily: 'var(--font-mono)' }}>{qty}</span>
+                              <span style={{ width: '26px', textAlign: 'center', fontWeight: '900' }}>{qty}</span>
                               <button className="qty-btn" style={{ background: 'var(--paper-raised)', color: 'var(--ink-soft)', border: '1px solid var(--line)' }} disabled={!qty} onClick={() => handleRemove(active)}><Icons.Minus /></button>
                             </div>
                           </div>
@@ -440,7 +440,7 @@ const CustomerView = () => {
               return (
                 <div key={o.id} className="order-ticket n-fade-in">
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--ink-faint)', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>#{o.id.slice(-6).toUpperCase()}</span>
+                    <span style={{ color: 'var(--ink-faint)', fontSize: '13px' }}>#{o.id.slice(-6).toUpperCase()}</span>
                     <span className="stub" style={{ color: 'var(--teal-deep)' }}>{o.total} ر.س</span>
                   </div>
 
@@ -498,7 +498,7 @@ const CustomerView = () => {
               {selectedOrderDetails.items.map((item, idx) => (
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--line)' }}>
                   <span style={{ color: 'var(--ink-soft)', fontWeight: '600' }}>{item.name} <small style={{ color: 'var(--ink-faint)' }}>x{item.qty}</small></span>
-                  <span style={{ fontWeight: '800', color: 'var(--teal-deep)', fontFamily: 'var(--font-mono)' }}>{item.price * item.qty} ر.س</span>
+                  <span style={{ fontWeight: '800', color: 'var(--teal-deep)' }}>{item.price * item.qty} ر.س</span>
                 </div>
               ))}
             </div>
@@ -548,7 +548,7 @@ const CustomerView = () => {
               {cart.map(i => (
                 <div key={i.id} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '14px' }}>
                   <span style={{ color: 'var(--ink-soft)' }}>{i.name} <small>x{i.qty}</small></span>
-                  <span style={{ fontWeight: '700', fontFamily: 'var(--font-mono)' }}>{i.price * i.qty} ر.س</span>
+                  <span style={{ fontWeight: '700' }}>{i.price * i.qty} ر.س</span>
                 </div>
               ))}
               <div style={{ height: '1px', background: 'var(--line)', margin: '14px 0' }} />

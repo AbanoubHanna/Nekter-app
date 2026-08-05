@@ -58,6 +58,8 @@
 
 * { box-sizing: border-box; }
 body { font-family: var(--font-display); }
+/* form controls don't inherit font-family by default in browser UA stylesheets — force it everywhere so nothing silently falls back off Cairo */
+button, input, select, textarea { font-family: inherit; }
 
 /* =========================================================
    PRICE / NUMBER READOUT — plain bold figure, no box.

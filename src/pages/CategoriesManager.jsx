@@ -208,7 +208,7 @@ const CategoriesManager = ({ categories, products }) => {
                   ) : (
                     <>
                       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <b style={{ fontSize: '15px', color: 'var(--ink)' }}>{p.name}</b>
+                        <b style={{ fontSize: '15px', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</b>
                         {p.isVisible === false && <span style={{ fontSize: '11px', color: 'var(--danger)', fontWeight: 'bold' }}>مخفي من المنيو</span>}
                       </div>
                       

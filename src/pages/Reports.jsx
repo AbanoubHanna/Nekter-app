@@ -146,7 +146,7 @@ const Reports = ({ orders, products }) => {
           <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.Trophy size={18} /> الأكثر مبيعاً</h3>
           {topProducts.length === 0 ? <p style={{ color: 'var(--ink-faint)' }}>لا توجد بيانات كافية بعد.</p> : topProducts.map((p, i) => (
             <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < topProducts.length - 1 ? '1px solid var(--line)' : 'none' }}>
-              <span style={{ fontWeight: '700', color: 'var(--ink)' }}>#{i + 1} {p.name}</span>
+              <span style={{ fontWeight: '700', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>#{i + 1} {p.name}</span>
               <span style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <span className="tag tag-cold">{p.qty} قطعة</span>
                 <span className="stub" style={{ fontSize: '12px' }}>{p.revenue.toLocaleString()} ر.س</span>
@@ -158,7 +158,7 @@ const Reports = ({ orders, products }) => {
           <h3 style={{ marginTop: 0, marginBottom: '14px', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: '8px' }}><Icons.TrendingDown size={18} /> الأقل مبيعاً</h3>
           {worstProducts.length === 0 ? <p style={{ color: 'var(--ink-faint)' }}>لا توجد بيانات كافية بعد للمقارنة.</p> : worstProducts.map((p, i) => (
             <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: i < worstProducts.length - 1 ? '1px solid var(--line)' : 'none' }}>
-              <span style={{ fontWeight: '700', color: 'var(--ink)' }}>{p.name}</span>
+              <span style={{ fontWeight: '700', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</span>
               <span className="tag" style={{ background: 'var(--warning-tint)', color: 'var(--warning)' }}>{p.qty} قطعة فقط</span>
             </div>
           ))}

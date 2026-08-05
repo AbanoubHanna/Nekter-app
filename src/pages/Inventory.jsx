@@ -384,7 +384,7 @@ const Inventory = ({ products, categories }) => {
                       </div>
                     </div>
                   </td>
-                  <td><b>{p.name}</b> {p.isCombo && <span className="tag" style={{ background: 'var(--berry-tint)', color: 'var(--berry-deep)', marginRight: '6px' }}>🎁 عرض</span>}</td>
+                  <td><b style={{ unicodeBidi: 'plaintext' }}>{p.name}</b> {p.isCombo && <span className="tag" style={{ background: 'var(--berry-tint)', color: 'var(--berry-deep)', marginRight: '6px' }}>🎁 عرض</span>}</td>
                   <td><span className={`tag ${TAG_CLASS[temp]}`}>{p.category}</span></td>
                   <td>
                     {bulkPriceMode && selectedIds.includes(p.id) ? (
@@ -409,7 +409,7 @@ const Inventory = ({ products, categories }) => {
                   </td>
                   <td>
                     {p.trackStock ? (
-                      <span style={{ fontWeight: '800', fontFamily: 'var(--font-mono)', color: isLow ? 'var(--danger)' : 'var(--ink)' }}>
+                      <span style={{ fontWeight: '800', color: isLow ? 'var(--danger)' : 'var(--ink)' }}>
                         {p.stock} {isLow && '⚠️'}
                       </span>
                     ) : <span style={{ color: 'var(--ink-faint)', fontSize: '12px' }}>غير متتبَّع</span>}

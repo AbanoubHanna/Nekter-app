@@ -105,7 +105,7 @@ const Invoices = ({ orders = [] }) => {
                       <td colSpan={7} style={{ background: 'var(--paper)', padding: '16px 20px' }}>
                         {(o.items || []).map((item, idx) => (
                           <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', padding: '4px 0', color: 'var(--ink-soft)' }}>
-                            <span>{item.qty}x {item.name}</span>
+                            <span style={{ unicodeBidi: 'plaintext' }}>{item.qty}x {item.name}</span>
                             <span style={{  }}>{item.price * item.qty} ر.س</span>
                           </div>
                         ))}
