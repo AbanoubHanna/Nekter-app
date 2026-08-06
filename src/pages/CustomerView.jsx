@@ -279,10 +279,10 @@ const CustomerView = () => {
                       <div className="product-img-wrap">
                         <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                       </div>
-                      <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                      <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', height: '150px' }}>
                         <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</h3>
                         {p.comboItems?.length > 0 && (
-                          <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5' }}>
+                          <p style={{ margin: 0, fontSize: '11.5px', color: 'var(--berry-deep)', fontWeight: '700', lineHeight: '1.5', flex: 1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                             {p.comboItems.map(i => `${i.qty}x ${i.name}`).join(' + ')}
                           </p>
                         )}
@@ -329,9 +329,9 @@ const CustomerView = () => {
                           <div className="product-img-wrap">
                             <img src={p.image ? optimizedImageUrl(p.image, 400) : '/logo.png'} className="product-img" alt={p.name} loading="lazy" />
                           </div>
-                          <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                          <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', height: '150px' }}>
                             <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{p.name}</h3>
-                            <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5', flex: 1 }}>{p.description}</p>
+                            <p style={{ margin: 0, fontSize: '12px', color: 'var(--ink-faint)', lineHeight: '1.5', flex: 1, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{p.description}</p>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
                               <span className="stub" style={{ color: style.deep, fontSize: '15px' }}>{p.price} ر.س</span>
                               <div className="qty-pill">
@@ -356,9 +356,9 @@ const CustomerView = () => {
                         <div className="product-img-wrap">
                           <img src={groupImage ? optimizedImageUrl(groupImage, 400) : '/logo.png'} className="product-img" alt={baseName} loading="lazy" />
                         </div>
-                        <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+                        <div style={{ padding: '14px', display: 'flex', flexDirection: 'column', gap: '8px', height: '150px' }}>
                           <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: 'var(--ink)', unicodeBidi: 'plaintext' }}>{baseName}</h3>
-                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', flex: 1, overflow: 'hidden', alignContent: 'flex-start' }}>
                             {item.variants.map(v => (
                               <button
                                 key={v.id}
