@@ -13,7 +13,10 @@ export function optimizedImageUrl(url, width = 400) {
   if (!url || !url.includes('/storage/v1/object/public/')) return url;
   const transformed = url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
   const separator = transformed.includes('?') ? '&' : '?';
-  return `${transformed}${separator}width=${width}&quality=75&format=webp`;
+  // width alone leaves height unconstrained on some source images (a square
+  // photo can come back stretched, e.g. 400x2048) — pin both dimensions and
+  // let resize=cover crop to match, since every product photo displays square.
+  return `${transformed}${separator}width=${width}&height=${width}&resize=cover&quality=75&format=webp`;
 }
 
 // ---- row <-> app-object mapping helpers -------------------------------
