@@ -59,11 +59,11 @@ const GlobalStyle = () => (
     .cat-chip { flex-shrink: 0; padding: 10px 20px; border-radius: var(--r-full); font-weight: 800; font-size: 14px; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--line); background: var(--paper-raised); color: var(--ink-soft); transition: 0.2s; }
     .cat-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
     .section-head { padding: 4px 20px; display: flex; justify-content: space-between; align-items: baseline; margin: 22px 0 12px; }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 0 20px; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; padding: 0 20px; align-items: start; }
     .product-card { background: var(--paper-raised); border-radius: var(--r-lg); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow-sm); transition: 0.2s; }
     .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .product-img-wrap { position: relative; aspect-ratio: 1 / 1; background: var(--paper); }
-    .product-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .product-img-wrap { position: relative; aspect-ratio: 1 / 1; background: var(--paper); overflow: hidden; }
+    .product-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     @media (min-width: 640px) { .products-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; } }
     .qty-pill { display: flex; align-items: center; background: var(--paper); border-radius: var(--r-full); border: 1.5px solid var(--line); }
     .qty-btn { width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; }
