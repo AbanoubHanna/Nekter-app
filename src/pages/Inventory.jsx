@@ -121,9 +121,10 @@ const Inventory = ({ products, categories }) => {
   const deleteSelected = async () => {
     if (window.confirm(`هل أنت متأكد من حذف ${selectedIds.length} منتجات؟`)) {
       setIsLoading(true);
-      await supabase.from('products').delete().in('id', selectedIds);
-      setSelectedIds([]);
+      const { error } = await supabase.from('products').delete().in('id', selectedIds);
       setIsLoading(false);
+      if (error) { alert('فشل حذف المنتجات: ' + error.message); return; }
+      setSelectedIds([]);
     }
   };
 
